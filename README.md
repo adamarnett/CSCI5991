@@ -27,8 +27,16 @@ Each week outlines the intended topic and goals.
  - Deliverable: Markdown document detailing how to use the PPK2 and the power consumption of different sample programs
  - Deliverable: C program that can be flashed to the nRf52840 that uses the onboard LEDs and buttons to do something interesting
 
-### Week 2 (Feb 1st - 7th): devicetree
- - 
+### Week 2 (Feb 1st - 7th): Multithreading
+ - Goal: Understand how multithreading works in zephyr
+ - Goal: Understand how memory protection/sharing works in zephyr
+ - Goal: Investigate how the zephyr kernel communicates with a processor's MPU
+ - Reference: Chapter 4 in textbook, ARM documentation for last goal
+   - https://developer.arm.com/documentation/100166/0001/Memory-Protection-Unit
+ - Deliverable: C program that can be flashed to the nRF52840 that utilizes three or more threads and:
+   - Each thread prints a message to the console, saying which thread it is
+   - Each thread has a "password" (possibly stored in thread custom data?) that should be kept secret from other threads
+   - Thread passwords will be shared and included in printed messages upon user input (button press)
 
 ### Week 3 (Feb 8th - 14th)
 
