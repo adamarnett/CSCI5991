@@ -24,7 +24,7 @@ Each week outlines the intended topic and goals.
  - Reference: Chapter 3 in textbook, PPK2 Manual
    - https://docs-be.nordicsemi.com/bundle/ug_ppk2/attach/PPK2_User_Guide_v1.0.1.pdf?_LANG=enus
  - Deliverable: Shell script to semi-automatically setup a zephyr development environment on an ubuntu based(?) linux distro
- - Deliverable: Markdown document detailing how to use the PPK2 and the power consumption of three different sample programs
+ - Deliverable: Markdown document detailing how to use the PPK2 and the power consumption of different sample programs
  - Deliverable: C program that can be flashed to the nRf52840 that uses the onboard LEDs and buttons to do something interesting
 
 ### Week 2 (Feb 1st - 7th): devicetree

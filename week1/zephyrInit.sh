@@ -67,16 +67,37 @@ if [ $? -ne 0 ] then
     exit
 fi
 
+# initialize a west workspace
+west init ~/zephyrproj
+# check if that worked
+if [ $? -ne 0 ] then
+    echo "ERROR: unable to initialize west workspace. Exiting."
+    exit
+fi
 
+# update the workspace
+cd ~/zephyrproj
+west update
+# check if that worked
+if [ $? -ne 0 ] then
+    echo "ERROR: unable to update west workspace. Exiting."
+    exit
+fi
 
+# get a zephyr cmake package
+west zephyr-export
+# check if that worked
+if [ $? -ne 0 ] then
+    echo "ERROR: unable to export zephyr cmake package. Exiting."
+    exit
+fi
 
+# get python dependencies for virtual environment
+west packages pip --install
+# check if that worked
+if [ $? -ne 0 ] then
+    echo "ERROR: unable to get python dependencies via west. Exiting."
+    exit
+fi
 
-
-
-
-
-
-
-
-
-
+echo "Finished! zephyr/west workspace created at ~/zephyrproj."
