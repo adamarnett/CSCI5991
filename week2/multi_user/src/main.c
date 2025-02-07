@@ -21,7 +21,7 @@ K_FIFO_DEFINE(msgFifo);
 
 // set sizes of thir stacks and thread priorities
 #define STACK_SIZE 512
-#define THREAD_0_PRIO 3
+#define THREAD_0_PRIO 60
 #define THREAD_1_PRIO 5
 #define THREAD_2_PRIO 5
 
@@ -41,24 +41,20 @@ void thread_user(void* v0, void* v1, void* v2) {
     struct data_item_t tx;
 
     while (1) {
-        printk("HELLO again!\n");
         memset(tx.msg, 0, sizeof(char)*32);
         for (uint8_t i = 0; i < 31; i++) {
-            printk("    HELLO again again!\n");
             memset(
                 tx.msg + i,
                 ((sys_rand8_get() % 89) + 33),
                 1
             );
-            printk("    HELLO again againnnnnnnnn!\n");
-            printk("[%s]\n", tx.msg);
+            //printk("[%s]\n", tx.msg);
         }
         tx.msg[31] = '\0';
 
-        printk("HELLO! Once more :)\n");
+        printk("tx.msg right before fifo_put: [%s]\n", tx.msg);
         k_fifo_put(&msgFifo, &tx);
-        printk("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
-
+        
         k_msleep(10000);
     }
 }
@@ -71,27 +67,22 @@ int main(void) {
 
     struct k_thread thread_st_1;
     //struct k_thread thread_st_2;
-    printk("HELLO!1\n");
 
-    k_tid_t tid_1 = k_thread_create(&thread_st_1, stack1, K_KERNEL_STACK_SIZEOF(stack1), thread_user, NULL, NULL, NULL, THREAD_1_PRIO, K_USER, K_MSEC(10000));
+    k_tid_t tid_1 = k_thread_create(&thread_st_1, stack1, K_KERNEL_STACK_SIZEOF(stack1), thread_user, NULL, NULL, NULL, THREAD_1_PRIO, 0, K_MSEC(10000));
     //k_tid_t tid_2 = k_thread_create(&thread_st_2, stack2, K_KERNEL_STACK_SIZEOF(stack2), thread_user, NULL, NULL, NULL, THREAD_1_PRIO, K_USER, K_MSEC(100));
-    printk("HELLO!2\n");
-    k_object_access_grant(&msgFifo, tid_1);
+    //k_object_access_grant(&msgFifo, tid_1);
     //k_object_access_grant(&msgFifo, tid_2);
-    printk("HELLO!3\n");
 
     struct data_item_t* rx = NULL;
 
     while (1) {
-        printk("HELLO!n\n");
-        k_msleep(50);
+        printk("Before fifo_get\n");
         // recieve item from the fifo
         rx = k_fifo_get(&msgFifo, K_FOREVER);
-        printk("[[[%s]]]\n", rx->msg);
+        printk("rx->msg after fifo_get: [%s]\n", rx->msg);
         if (rx->msg != NULL) {
             printk("%s\n", rx->msg);
         }
-        k_msleep(50);
     }
 
     return 1;
