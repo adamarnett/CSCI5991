@@ -28,6 +28,7 @@ K_FIFO_DEFINE(msgFifo);
 //struct k_thread_stack stack1;
 //struct k_thread_stack stack2;
 
+// stacks need to be defined before k_thread_create can be called
 K_THREAD_STACK_DEFINE(stack1, STACK_SIZE);
 K_THREAD_STACK_DEFINE(stack2, STACK_SIZE);
 
@@ -62,7 +63,7 @@ void thread_user(void* v0, void* v1, void* v2) {
     }
 }
 
-// thread 0 --> supervisor mode thread
+// main --> supervisor mode thread
 int main(void) {
     printk("HELLO!0\n");
 
@@ -72,7 +73,7 @@ int main(void) {
     //struct k_thread thread_st_2;
     printk("HELLO!1\n");
 
-    k_tid_t tid_1 = k_thread_create(&thread_st_1, stack1, K_KERNEL_STACK_SIZEOF(stack1), thread_user, NULL, NULL, NULL, THREAD_1_PRIO, K_USER, K_MSEC(100));
+    k_tid_t tid_1 = k_thread_create(&thread_st_1, stack1, K_KERNEL_STACK_SIZEOF(stack1), thread_user, NULL, NULL, NULL, THREAD_1_PRIO, K_USER, K_MSEC(10000));
     //k_tid_t tid_2 = k_thread_create(&thread_st_2, stack2, K_KERNEL_STACK_SIZEOF(stack2), thread_user, NULL, NULL, NULL, THREAD_1_PRIO, K_USER, K_MSEC(100));
     printk("HELLO!2\n");
     k_object_access_grant(&msgFifo, tid_1);
@@ -84,6 +85,7 @@ int main(void) {
     while (1) {
         printk("HELLO!n\n");
         k_msleep(50);
+        // recieve item from the fifo
         rx = k_fifo_get(&msgFifo, K_FOREVER);
         printk("[[[%s]]]\n", rx->msg);
         if (rx->msg != NULL) {
