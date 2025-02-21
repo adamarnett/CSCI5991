@@ -46,7 +46,12 @@ Each week outlines the intended topic and goals.
    - Communicates in some way using an SPI bus
    - The SPI bus should utilize the Zephyr Generic SPI driver
 
-### Week 4 (Feb 15th - 21st)
+### Week 4 (Feb 15th - 21st): I2C
+  - Goal: Get an I2C (inter-intergrated circuit) bus working
+  - Goal: Setup nRF Connect VS code extensions
+  - Deliverable: C program that can be flashed to the nRF52840 that...
+   - Communicates in some way using an I2C bus
+   - The I2C bus should utilize the Zephyr Generic I2C driver
 
 ### Week 5 (Feb 22nd - 28th)
 
