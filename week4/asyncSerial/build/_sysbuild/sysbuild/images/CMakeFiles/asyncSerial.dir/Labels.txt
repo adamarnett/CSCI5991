@@ -1,0 +1,13 @@
+# Target labels
+ asyncSerial
+# Source files and their labels
+/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/CMakeFiles/asyncSerial
+/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/CMakeFiles/asyncSerial.rule
+/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/CMakeFiles/asyncSerial-complete.rule
+/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-build.rule
+/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-configure.rule
+/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-download.rule
+/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-install.rule
+/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-mkdir.rule
+/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-patch.rule
+/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-update.rule
