@@ -48,12 +48,21 @@ Each week outlines the intended topic and goals.
 
 ### Week 4 (Feb 15th - 21st): I2C
   - Goal: Get an I2C (inter-intergrated circuit) bus working
+  - Goal: Better understand devicetree by achieving the first goal
   - Goal: Setup nRF Connect VS code extensions
   - Deliverable: C program that can be flashed to the nRF52840 that...
    - Communicates in some way using an I2C bus
    - The I2C bus should utilize the Zephyr Generic I2C driver
 
-### Week 5 (Feb 22nd - 28th)
+### Week 5 (Feb 22nd - 28th): QSPI
+  - Goal: Get a QSPI (quad serial peripheral interface) bus working
+   - Sub-Goal: Get a QSPI bus working on an Arduino to get familiar with the protocol, then on the nRF52840
+  - Goal: Better understand devicetree by achieving the first goal
+  - Goal: Continue extra work from week 4 on asynchronous serial communication (see week4/week4.md)
+  - Reference: Chapter 6 in textbook
+  - Deliverable: C program that can be flashed to the nRF52840 that...
+   - Communicates in some way using a QSPI bus
+   - The QSPI bus should utilize a Zephyr QSPI driver (there are multiple, not just one generic)
 
 ### Week 6 (Mar 1st - 7th)
 
