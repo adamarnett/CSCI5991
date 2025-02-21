@@ -1,1 +1,50 @@
 
+
+// This overlay file allows the remapping of pins for buses that 
+// go through GPIO pins
+
+// remap what is disignated as i2c0
+&i2c0 {
+    // referenced when checking if device is ready in C code I think
+	status = "okay";
+    // compatible is needed, otherwise you'll get -ENOTSUP returns from some functions
+	compatible = "nordic,nrf-twim";
+	label = "I2C_0";
+    // property that designates which pins to use
+    // default is normal operation... sleep is low power?
+	pinctrl-0 = <&i2c0_default>;
+	pinctrl-1 = <&i2c0_sleep>;
+	pinctrl-names = "default", "sleep";
+    // doesn't matter as far as I know...
+	clock-frequency = <100000>; 
+};
+
+// remap stuff within the pinctrl node
+&pinctrl {
+    // remap i2c0_default
+	i2c0_default: i2c0_default{
+		group1 {
+            // within NRF_PSEL()...
+            //      first arg is function of pin to remap
+            //      second arg is gpio port of new pin (?)
+            //      third arg is new pin within port to remap to
+            //
+            // psels = <NRF_PSEL(TWIM_SDA, 0, 29)>,
+			//	<NRF_PSEL(TWIM_SCL, 0, 28)>;
+            // Above will remap what is normally 0.4 and 0.3 to 0.29 and 0.28
+            // Note that 0.4 and .3 might not be truly normal, I might've accidentally 
+            // modified the nordic SDK file... whoopsies!
+			psels = <NRF_PSEL(TWIM_SDA, 0, 29)>,
+				<NRF_PSEL(TWIM_SCL, 0, 28)>;
+		};
+	};
+
+	i2c0_sleep: i2c0_sleep{
+		group1 {
+			psels = <NRF_PSEL(TWIM_SDA, 0, 29)>,
+				<NRF_PSEL(TWIM_SCL, 0, 28)>;
+			low-power-enable;
+		};
+	};
+
+};
