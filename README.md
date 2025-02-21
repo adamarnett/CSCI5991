@@ -38,7 +38,13 @@ Each week outlines the intended topic and goals.
    - Each thread has a "password" (possibly stored in thread custom data?) that should be kept secret from other threads
    - Thread passwords will be shared and included in printed messages upon user input (button press)
 
-### Week 3 (Feb 8th - 14th)
+### Week 3 (Feb 8th - 14th): SPI
+  - Note - this is being written retroactively. Unfortunate personal life events had me very sad and unable to get much done this week. I also still need to push this stuff to the git repo, but it's on my old computer.
+  - Goal: Get an SPI (serial peripheral interface) bus working
+  - Goal: Better understand devicetree by achieving the first goal
+  - Deliverable: C program that can be flashed to the nRF52840 that...
+   - Communicates in some way using an SPI bus
+   - The SPI bus should utilize the Zephyr Generic SPI driver
 
 ### Week 4 (Feb 15th - 21st)
 
