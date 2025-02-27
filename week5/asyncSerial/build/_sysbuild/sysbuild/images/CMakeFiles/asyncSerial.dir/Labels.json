@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/CMakeFiles/asyncSerial"
+		},
+		{
+			"file" : "/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/CMakeFiles/asyncSerial.rule"
+		},
+		{
+			"file" : "/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/CMakeFiles/asyncSerial-complete.rule"
+		},
+		{
+			"file" : "/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-build.rule"
+		},
+		{
+			"file" : "/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-configure.rule"
+		},
+		{
+			"file" : "/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-download.rule"
+		},
+		{
+			"file" : "/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-install.rule"
+		},
+		{
+			"file" : "/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-mkdir.rule"
+		},
+		{
+			"file" : "/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-patch.rule"
+		},
+		{
+			"file" : "/home/adam/asyncSerial/build/_sysbuild/sysbuild/images/asyncSerial-prefix/src/asyncSerial-stamp/asyncSerial-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"asyncSerial"
+		],
+		"name" : "asyncSerial"
+	}
+}

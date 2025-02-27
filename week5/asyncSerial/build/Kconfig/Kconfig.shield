@@ -1,0 +1,2 @@
+osource "/home/adam/asyncSerial/boards/shields/*/Kconfig.shield"
+osource "/home/adam/ncs/v2.9.0/nrf/boards/shields/*/Kconfig.shield"

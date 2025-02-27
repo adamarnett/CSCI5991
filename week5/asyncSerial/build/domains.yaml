@@ -1,0 +1,7 @@
+default: asyncSerial
+build_dir: /home/adam/asyncSerial/build
+domains:
+  - name: asyncSerial
+    build_dir: /home/adam/asyncSerial/build/asyncSerial
+flash_order:
+  - asyncSerial
