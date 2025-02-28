@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/CMakeFiles/qspiFlash"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/CMakeFiles/qspiFlash.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/CMakeFiles/qspiFlash-complete.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-build.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-configure.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-download.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-install.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-mkdir.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-patch.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"qspiFlash"
+		],
+		"name" : "qspiFlash"
+	}
+}

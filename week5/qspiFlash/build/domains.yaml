@@ -1,0 +1,7 @@
+default: qspiFlash
+build_dir: /home/adam/zephyrProjects/qspiFlash/build
+domains:
+  - name: qspiFlash
+    build_dir: /home/adam/zephyrProjects/qspiFlash/build/qspiFlash
+flash_order:
+  - qspiFlash

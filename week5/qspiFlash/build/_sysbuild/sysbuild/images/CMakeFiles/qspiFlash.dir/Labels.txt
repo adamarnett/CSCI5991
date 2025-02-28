@@ -1,0 +1,13 @@
+# Target labels
+ qspiFlash
+# Source files and their labels
+/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/CMakeFiles/qspiFlash
+/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/CMakeFiles/qspiFlash.rule
+/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/CMakeFiles/qspiFlash-complete.rule
+/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-build.rule
+/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-configure.rule
+/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-download.rule
+/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-install.rule
+/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-mkdir.rule
+/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-patch.rule
+/home/adam/zephyrProjects/qspiFlash/build/_sysbuild/sysbuild/images/qspiFlash-prefix/src/qspiFlash-stamp/qspiFlash-update.rule
