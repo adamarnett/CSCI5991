@@ -1,0 +1,7 @@
+default: serLCD_IV
+build_dir: /home/adam/serLCD_IV/build
+domains:
+  - name: serLCD_IV
+    build_dir: /home/adam/serLCD_IV/build/serLCD_IV
+flash_order:
+  - serLCD_IV

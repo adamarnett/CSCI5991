@@ -1,0 +1,13 @@
+# Target labels
+ serLCD_IV
+# Source files and their labels
+/home/adam/serLCD_IV/build/_sysbuild/sysbuild/images/CMakeFiles/serLCD_IV
+/home/adam/serLCD_IV/build/_sysbuild/sysbuild/images/CMakeFiles/serLCD_IV.rule
+/home/adam/serLCD_IV/build/_sysbuild/sysbuild/images/CMakeFiles/serLCD_IV-complete.rule
+/home/adam/serLCD_IV/build/_sysbuild/sysbuild/images/serLCD_IV-prefix/src/serLCD_IV-stamp/serLCD_IV-build.rule
+/home/adam/serLCD_IV/build/_sysbuild/sysbuild/images/serLCD_IV-prefix/src/serLCD_IV-stamp/serLCD_IV-configure.rule
+/home/adam/serLCD_IV/build/_sysbuild/sysbuild/images/serLCD_IV-prefix/src/serLCD_IV-stamp/serLCD_IV-download.rule
+/home/adam/serLCD_IV/build/_sysbuild/sysbuild/images/serLCD_IV-prefix/src/serLCD_IV-stamp/serLCD_IV-install.rule
+/home/adam/serLCD_IV/build/_sysbuild/sysbuild/images/serLCD_IV-prefix/src/serLCD_IV-stamp/serLCD_IV-mkdir.rule
+/home/adam/serLCD_IV/build/_sysbuild/sysbuild/images/serLCD_IV-prefix/src/serLCD_IV-stamp/serLCD_IV-patch.rule
+/home/adam/serLCD_IV/build/_sysbuild/sysbuild/images/serLCD_IV-prefix/src/serLCD_IV-stamp/serLCD_IV-update.rule
