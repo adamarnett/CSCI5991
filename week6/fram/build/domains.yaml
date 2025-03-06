@@ -1,0 +1,7 @@
+default: fram
+build_dir: /home/adam/fram/build
+domains:
+  - name: fram
+    build_dir: /home/adam/fram/build/fram
+flash_order:
+  - fram

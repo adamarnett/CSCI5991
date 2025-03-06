@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/adam/fram/build/_sysbuild/sysbuild/images/CMakeFiles/fram"
+		},
+		{
+			"file" : "/home/adam/fram/build/_sysbuild/sysbuild/images/CMakeFiles/fram.rule"
+		},
+		{
+			"file" : "/home/adam/fram/build/_sysbuild/sysbuild/images/CMakeFiles/fram-complete.rule"
+		},
+		{
+			"file" : "/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-build.rule"
+		},
+		{
+			"file" : "/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-configure.rule"
+		},
+		{
+			"file" : "/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-download.rule"
+		},
+		{
+			"file" : "/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-install.rule"
+		},
+		{
+			"file" : "/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-mkdir.rule"
+		},
+		{
+			"file" : "/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-patch.rule"
+		},
+		{
+			"file" : "/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"fram"
+		],
+		"name" : "fram"
+	}
+}

@@ -1,0 +1,13 @@
+# Target labels
+ fram
+# Source files and their labels
+/home/adam/fram/build/_sysbuild/sysbuild/images/CMakeFiles/fram
+/home/adam/fram/build/_sysbuild/sysbuild/images/CMakeFiles/fram.rule
+/home/adam/fram/build/_sysbuild/sysbuild/images/CMakeFiles/fram-complete.rule
+/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-build.rule
+/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-configure.rule
+/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-download.rule
+/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-install.rule
+/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-mkdir.rule
+/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-patch.rule
+/home/adam/fram/build/_sysbuild/sysbuild/images/fram-prefix/src/fram-stamp/fram-update.rule
