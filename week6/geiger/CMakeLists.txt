@@ -5,8 +5,8 @@ project(geiger)
 
 target_sources(app PRIVATE 
     src/main.c
-    src/uartRx.h
-    src/uartRx.c
+    #src/uartRx.h
+    #src/uartRx.c
     src/fram.h
     src/fram.c
 )

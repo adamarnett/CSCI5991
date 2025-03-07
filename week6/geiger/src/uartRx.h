@@ -17,10 +17,10 @@ static const struct uart_config uart0_cfg = {
 };
 
 // buffer for storing received uart data
-static uint8_t uart0_rxBuf[48] = {0};
+static uint8_t uart0_rxBuf[48];
 
 // buffer for use of data by anything other than the callback function
-static char uart0_buf[48] = {0};
+static char uart0_buf[48];
 
 // flag for use by main
 enum uartUpdate {
