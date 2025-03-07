@@ -64,13 +64,22 @@ Each week outlines the intended topic and goals.
    - Communicates in some way using a QSPI bus
    - The QSPI bus should utilize a Zephyr QSPI driver (there are multiple, not just one generic)
 
-### Week 6 (Mar 1st - 7th)
+### Week 6 (Mar 1st - 7th): Halfway point
+  - Goal: Medium size project --> Geiger counter
+   - Read uart data from the MightyOhm geiger counter to the nRF52840
+   - Output data to a segmented or LCD display
+   - Write data to flash or other memory
 
 ### Week 7 (Mar 8th - 14th): Spring Break
+  - Goal: Enjoy Spring break
 
 ### Week 8 (Mar 15th - 21st)
+  - Goal: Improve responsiveness of LCD on geiger counter
+  - Goal: Enable read/write from FRAM chip, use GPIO buttons and some UI to allow user to see past measurements
+  - Possible Goal: Begin work on a public driver for the Sparkfun Quad Alphanumeric Display
+   - https://cdn.sparkfun.com/assets/c/8/7/2/5/VK16K33Datasheet.pdf
 
-### Week 9 (Mar 22nd - 28th):
+### Week 9 (Mar 22nd - 28th)
 
 ### Week 10 (Mar 29th - Apr 4th)
 
