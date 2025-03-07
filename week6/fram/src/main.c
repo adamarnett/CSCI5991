@@ -3,6 +3,19 @@
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/drivers/auxdisplay.h>
 #include <zephyr/sys/printk.h>
+#include <endian.h>
+
+//uint32_t swap_endianness_u32(uint32_t value) {
+//  return ((value >> 24) & 0x000000FF) |
+//         ((value >> 8) & 0x0000FF00) |
+//         ((value << 8) & 0x00FF0000) |
+//         ((value << 24) & 0xFF000000);
+//}
+//
+//uint16_t swap_endianness_u16(uint16_t value) {
+//        return ((value >> 8) & 0x00FF) |
+//               ((value << 8) & 0xFF00);
+//}
 
 
 const struct device *const serLcd_dev = DEVICE_DT_GET(DT_CHILD(DT_NODELABEL(i2c0), serlcd_72));
@@ -66,26 +79,174 @@ const struct device *i2c1_dev = DEVICE_DT_GET(DT_NODELABEL(i2c1));
 uint16_t framAddrWrite = 0x50; // 0b01010000
 uint16_t framAddrRead = 0x51; // 0b01010001
 
-int writeFramByte(uint8_t addrMsb, uint8_t addrLsb, uint8_t* data) {
 
-        uint8_t writeBuf[] = {addrMsb, addrLsb, 0x45};
+// struct for storing data from uart
+struct __attribute__((packed)) uartData {
+        uint32_t time;  // time (since startup) measurement was saved
+        uint16_t cps;   // counts per second
+        uint16_t cpm;   // counts per minute
+        uint32_t usph;  // micro sieverts per hour
+        uint8_t speed;  // counter report speed, S, F, or I
+};
 
-        return i2c_write(i2c1_dev, writeBuf, sizeof(writeBuf), 0x120);
+// struct for data transmission to fram
+struct __attribute__((packed)) framTx {
+        uint8_t addrMsb;        // most significant byte of write to address, msb of addrMsb 
+                                // should be zero since the fram chip has a 15-bit address space
+        uint8_t addrLsb;        // least significant byte of write to address
+        
+        struct uartData data;   // data to be written
+};
+
+int writeFram(uint16_t addr, struct uartData data) {
+
+        struct framTx writeStruct;
+        writeStruct.addrMsb = (uint8_t)(addr >> 8);
+        writeStruct.addrLsb = (uint8_t)(addr%256);
+        writeStruct.data = data;
+
+        return i2c_write(
+                i2c1_dev,
+                (uint8_t*) &writeStruct,
+                sizeof(writeStruct),
+                0x50
+        );
         
 }
 
-int readFram(uint8_t addrMsb, uint8_t addrLsb, uint8_t* data, uint8_t readLen) {
+int readFram(uint16_t startAddr, struct uartData* dataStruct) {
+        uint8_t rxBuf[sizeof(struct uartData)] = {0xFF};
 
-        uint8_t writeBuf[] = {addrMsb, addrLsb};
+        uint8_t txBuf[] = {
+                (uint8_t)(startAddr >> 8),
+                (uint8_t)(startAddr%256)
+        };
 
-        return i2c_write_read(
+        int err = i2c_write_read(
                 i2c1_dev, 
-                framAddrWrite,
-                writeBuf, 
-                sizeof(writeBuf), 
-                data,
-                readLen
+                0x50,
+                txBuf, 
+                sizeof(txBuf), 
+                rxBuf,
+                sizeof(rxBuf)
         );
+
+        if (err) {
+                return err;
+        }
+
+        dataStruct->time |= (((uint32_t)rxBuf[3]) << 24) | 
+                (((uint32_t)rxBuf[2]) << 16) |
+                (((uint32_t)rxBuf[1]) << 8) |
+                ((uint32_t)rxBuf[0]);
+        dataStruct->cps |= (((uint16_t)rxBuf[5]) << 8) |
+                ((uint16_t)rxBuf[4]);
+        dataStruct->cpm |= (((uint16_t)rxBuf[7]) << 8) |
+                ((uint16_t)rxBuf[6]);
+        dataStruct->usph |= (((uint32_t)rxBuf[11]) << 24) | 
+                (((uint32_t)rxBuf[10]) << 16) |
+                (((uint32_t)rxBuf[9]) << 8) |
+                ((uint32_t)rxBuf[8]);
+        dataStruct->speed = rxBuf[12];
+
+        return 0;
+}
+
+// print a 64 byte wide region of fram starting at startAddr
+int printFram_64B(uint16_t startAddr) {
+
+        uint8_t txBuf[] = {
+                (uint8_t)(startAddr >> 8),
+                (uint8_t)(startAddr%256)
+        };
+
+        uint8_t rxBuf[64] = {0xFF};
+
+        // read 64 bytes from startAddr (txBuf[0:2])
+        int status = i2c_write_read(
+                i2c1_dev,
+                0x50,
+                txBuf,
+                2*sizeof(uint8_t),
+                rxBuf,
+                64*sizeof(uint8_t)
+        );
+
+        if (status) {
+                printk("Failed to read data to print. Error [%d]\n", status);
+                return status;
+        }
+
+        // check if everything got set to zero
+        printk("\nDATA READ:\n[ ADDR ] [ BIN DATA      ][HEX ]\n");
+        for (uint8_t i = 0; i < 64; i++) {
+                printk("[0x%04X] [", (startAddr + i));
+                for (int j = 7; j >= 1; j--) {
+                        printk("%d ", ((rxBuf[i] >> j)&1) );
+                }
+                
+                printk("%d][0x%02X]\n", (rxBuf[i]&1), rxBuf[i]);
+        }
+
+        // return success
+        return 0;
+
+}
+
+// erase a 64 byte wide region of fram starting at startAddr
+int eraseFram_64B(uint16_t startAddr) {
+        
+        // buffer w/ room for address and 64 bytes of zeros
+        uint8_t txBuf[66] = {0x00};
+        txBuf[0] = (uint8_t)(startAddr >> 8);
+        txBuf[1] = (uint8_t)(startAddr%256);
+
+        // buffer full of not zeros to read into
+        uint8_t rxBuf[64] = {0xFF};
+
+        // int to track return value of functions
+        int status = 0;
+        
+        // write buffer full of zeros
+        status = i2c_write(
+                i2c1_dev,
+                txBuf,
+                sizeof(txBuf),
+                0x50
+        );
+
+        if (status) {
+                printk("Failed to write while attempting to erase data. Error [%d]\n", status);
+                return status;
+        }
+
+        // read 64 bytes from startAddr (txBuf[0:2])
+        status = i2c_write_read(
+                i2c1_dev,
+                0x50,
+                txBuf,
+                2*sizeof(uint8_t),
+                rxBuf,
+                64*sizeof(uint8_t)
+        );
+
+        if (status) {
+                printk("Failed to validate erasure of data. Error [%d]\n", status);
+                return status;
+        }
+
+        // check if everything got set to zero
+        for (uint8_t i = 0; i < 64; i++) {
+                // if rxBuf has anything but 0
+                if (rxBuf[i]) {
+                        // erase failed...
+                        return 1;
+                }
+        }
+
+        // return success
+        return 0;
+
 }
 
 
@@ -106,47 +267,45 @@ int main(void)
                 return 0;
         }
 
-        uint8_t data0[] = {0x45};
-        uint8_t data1[] = {0xFF};
-        uint8_t txBuf[] = {0x00,0x00,0x45};
+        int err = eraseFram_64B(0x0000);
+        printk("erase result: [%d]\n", err);
 
-        printk("Before read/write data0: [%d], data1: [%d]\n", data0[0], data1[0]);
+        err = eraseFram_64B(0x0040);
+        printk("erase result: [%d]\n", err);
 
-        int status = 200;
+        err = eraseFram_64B(0x0080);
+        printk("erase result: [%d]\n", err);
 
-        //status = writeFramByte(0x00,0x00,data0);
+        struct uartData testy;
+        testy.time = 69;
+        testy.cps = 69;
+        testy.cpm = 69;
+        testy.usph = 69;
+        testy.speed = 'F';
 
-        status = i2c_write(
-                i2c1_dev,
-                txBuf,
-                sizeof(txBuf),
-                0b01010000
-        );
+        uint8_t testy_2[13] = {0xFF};
 
-        printk("Status after write: [%d]\n", status);
+        struct uartData testy_3;
+        testy_3.time = 0;
+        testy_3.cps = 0;
+        testy_3.cpm = 0;
+        testy_3.usph = 0;
+        testy_3.speed = 0;
 
-        k_msleep(10);
+        writeFram(0x0000, testy);
 
-        //status = readFram(
-        //        0x00,
-        //        0x00,
-        //        data1,
-        //        sizeof(uint8_t)
-        //);
+        readFram(0x0000, &testy_3);
 
-        status = i2c_write_read(
-                i2c1_dev,
-                0b01010000, //0x50,
-                txBuf,
-                2,
-                data1,
-                1
-        );
+        printFram_64B(0x0000);
 
-        printk("Status after read: [%d]\n", status);
+        printk("testy time [%d]\n", testy.time);
+        printk("testy cps [%d]\n", testy.cps);
 
-        printk("After read/write data0: [%d], data1: [%d]\n", data0[0], data1[0]);
-
+        printk("testy_3 time [%d]\n", testy_3.time);
+        printk("testy_3 cps [%d]\n", testy_3.cps);
+        printk("testy_3 cpm [%d]\n", testy_3.cpm);
+        printk("testy_3 usph [%d]\n", testy_3.usph);
+        printk("testy_3 speed [%c]\n", testy_3.speed);
 
         return 0;
 }

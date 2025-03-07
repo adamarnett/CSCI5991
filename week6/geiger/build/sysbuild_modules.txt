@@ -1,0 +1,2 @@
+"nrf":"/home/adam/ncsII/ncs/main/nrf":"/home/adam/ncsII/ncs/main/nrf/sysbuild"
+"mcuboot":"/home/adam/ncsII/ncs/main/bootloader/mcuboot":"/home/adam/ncsII/ncs/main/bootloader/mcuboot/boot/zephyr/sysbuild"

@@ -1,0 +1,7 @@
+default: geiger
+build_dir: /home/adam/zephyrProjects/geiger/build
+domains:
+  - name: geiger
+    build_dir: /home/adam/zephyrProjects/geiger/build/geiger
+flash_order:
+  - geiger

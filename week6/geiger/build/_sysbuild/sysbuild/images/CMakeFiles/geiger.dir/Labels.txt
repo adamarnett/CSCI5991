@@ -1,0 +1,13 @@
+# Target labels
+ geiger
+# Source files and their labels
+/home/adam/zephyrProjects/geiger/build/_sysbuild/sysbuild/images/CMakeFiles/geiger
+/home/adam/zephyrProjects/geiger/build/_sysbuild/sysbuild/images/CMakeFiles/geiger.rule
+/home/adam/zephyrProjects/geiger/build/_sysbuild/sysbuild/images/CMakeFiles/geiger-complete.rule
+/home/adam/zephyrProjects/geiger/build/_sysbuild/sysbuild/images/geiger-prefix/src/geiger-stamp/geiger-build.rule
+/home/adam/zephyrProjects/geiger/build/_sysbuild/sysbuild/images/geiger-prefix/src/geiger-stamp/geiger-configure.rule
+/home/adam/zephyrProjects/geiger/build/_sysbuild/sysbuild/images/geiger-prefix/src/geiger-stamp/geiger-download.rule
+/home/adam/zephyrProjects/geiger/build/_sysbuild/sysbuild/images/geiger-prefix/src/geiger-stamp/geiger-install.rule
+/home/adam/zephyrProjects/geiger/build/_sysbuild/sysbuild/images/geiger-prefix/src/geiger-stamp/geiger-mkdir.rule
+/home/adam/zephyrProjects/geiger/build/_sysbuild/sysbuild/images/geiger-prefix/src/geiger-stamp/geiger-patch.rule
+/home/adam/zephyrProjects/geiger/build/_sysbuild/sysbuild/images/geiger-prefix/src/geiger-stamp/geiger-update.rule
