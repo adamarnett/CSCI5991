@@ -73,9 +73,10 @@ Each week outlines the intended topic and goals.
 ### Week 7 (Mar 8th - 14th): Spring Break
   - Goal: Enjoy Spring break
 
-### Week 8 (Mar 15th - 21st)
+### Week 8 (Mar 15th - 21st): Geiger Counter Improvements
   - Goal: Improve responsiveness of LCD on geiger counter
   - Goal: Enable read/write from FRAM chip, use GPIO buttons and some UI to allow user to see past measurements
+  - Goal: Understand why data is read out backwards from the FRAM chip
   - Possible Goal: Begin work on a public driver for the Sparkfun Quad Alphanumeric Display
    - https://cdn.sparkfun.com/assets/c/8/7/2/5/VK16K33Datasheet.pdf
 
