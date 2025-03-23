@@ -1,0 +1,13 @@
+# Target labels
+ ht16k33
+# Source files and their labels
+/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/CMakeFiles/ht16k33
+/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/CMakeFiles/ht16k33.rule
+/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/CMakeFiles/ht16k33-complete.rule
+/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-build.rule
+/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-configure.rule
+/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-download.rule
+/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-install.rule
+/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-mkdir.rule
+/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-patch.rule
+/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-update.rule

@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/CMakeFiles/ht16k33"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/CMakeFiles/ht16k33.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/CMakeFiles/ht16k33-complete.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-build.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-configure.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-download.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-install.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-mkdir.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-patch.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/ht16k33/build/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"ht16k33"
+		],
+		"name" : "ht16k33"
+	}
+}

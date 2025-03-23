@@ -1,0 +1,7 @@
+default: ht16k33
+build_dir: /home/adam/zephyrProjects/ht16k33/build
+domains:
+  - name: ht16k33
+    build_dir: /home/adam/zephyrProjects/ht16k33/build/ht16k33
+flash_order:
+  - ht16k33

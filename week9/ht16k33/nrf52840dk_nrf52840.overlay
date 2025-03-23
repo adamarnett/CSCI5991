@@ -1,0 +1,77 @@
+
+
+// This overlay file allows the remapping of pins for buses that 
+// go through GPIO pins
+
+// remap what is disignated as i2c0
+&i2c0 {
+    // referenced when checking if device is ready in C code I think
+	status = "okay";
+    // compatible is needed, otherwise you'll get -ENOTSUP returns from some functions
+	compatible = "nordic,nrf-twim";
+	label = "I2C_0";
+    // property that designates which pins to use
+    // default is normal operation... sleep is low power?
+	pinctrl-0 = <&i2c0_default>;
+	pinctrl-1 = <&i2c0_sleep>;
+	pinctrl-names = "default", "sleep";
+    // doesn't matter as far as I know...
+	clock-frequency = <100000>; 
+};
+
+//&i2c1 {
+//	status = "okay";
+//	compatible = "nordic,nrf-twim";
+//	label = "I2C_1";
+//	pinctrl-0 = <&i2c1_default>;
+//	pinctrl-1 = <&i2c1_sleep>;
+//	pinctrl-names = "default", "sleep";
+//	clock-frequency = <100000>; 
+//
+//	vk16k33: vk16k33@70 {
+//		compatible = "sparkfun,vk16k33";
+//		label = "VK16K33";
+//		reg = <0x70>;
+//		//int-gpios = <&gpio0 29 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+//	};
+//};
+
+// remap stuff within the pinctrl node
+//&pinctrl {
+//    // remap i2c0_default
+//	i2c0_default: i2c0_default{
+//
+//		group1 {
+//			psels = <NRF_PSEL(TWIM_SDA, 0, 30)>,
+//			<NRF_PSEL(TWIM_SCL, 0, 31)>;
+//			bias-pull-up;
+//		};
+//	};
+//	i2c0_sleep: i2c0_sleep{
+//		group1 {
+//			psels = <NRF_PSEL(TWIM_SDA, 0, 30)>,
+//				<NRF_PSEL(TWIM_SCL, 0, 31)>;
+//			low-power-enable;
+//		};
+//	};
+//
+//	i2c1_default: i2c1_default{
+//
+//		group1 {
+//			psels = <NRF_PSEL(TWIM_SDA, 0, 29)>,
+//			<NRF_PSEL(TWIM_SCL, 0, 28)>;
+//			bias-pull-down;
+//			
+//		};
+//	};
+//
+//	i2c1_sleep: i2c1_sleep{
+//		group1 {
+//			psels = <NRF_PSEL(TWIM_SDA, 0, 29)>,
+//				<NRF_PSEL(TWIM_SCL, 0, 28)>;
+//			low-power-enable;
+//		};
+//	};
+//
+//};
+//
