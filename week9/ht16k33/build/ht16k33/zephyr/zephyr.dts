@@ -143,7 +143,7 @@
 			pinctrl-names = "default", "sleep";
 		};
 		i2c0: arduino_i2c: i2c@40003000 {
-			compatible = "nordic,nrf-twim";
+			compatible = "nordic,nrf-twi";
 			#address-cells = < 0x1 >;
 			#size-cells = < 0x0 >;
 			reg = < 0x40003000 0x1000 >;
@@ -154,8 +154,15 @@
 			pinctrl-0 = < &i2c0_default >;
 			pinctrl-1 = < &i2c0_sleep >;
 			pinctrl-names = "default", "sleep";
-			label = "I2C_0";
-			clock-frequency = < 0x186a0 >;
+			quadalpha@70 {
+				status = "okay";
+				compatible = "sparkfun,quadalpha";
+				reg = < 0x70 >;
+				columns = < 0x4 >;
+				rows = < 0x1 >;
+				command-delay-ms = < 0xa >;
+				special-command-delay-ms = < 0x32 >;
+			};
 		};
 		spi0: spi@40003000 {
 			compatible = "nordic,nrf-spi";
@@ -177,11 +184,20 @@
 			reg = < 0x40004000 0x1000 >;
 			interrupts = < 0x4 0x1 >;
 			easydma-maxcnt-bits = < 0x10 >;
-			status = "disabled";
+			status = "okay";
 			zephyr,pm-device-runtime-auto;
 			pinctrl-0 = < &i2c1_default >;
 			pinctrl-1 = < &i2c1_sleep >;
 			pinctrl-names = "default", "sleep";
+			serlcd@72 {
+				status = "okay";
+				compatible = "sparkfun,serlcd";
+				reg = < 0x72 >;
+				columns = < 0x10 >;
+				rows = < 0x2 >;
+				command-delay-ms = < 0xa >;
+				special-command-delay-ms = < 0x32 >;
+			};
 		};
 		spi1: spi@40004000 {
 			compatible = "nordic,nrf-spi";

@@ -1,57 +1,103 @@
 #include <zephyr/kernel.h>
 #include <zephyr/drivers/i2c.h>
-
-//#include "ht16k33.h"
+#include <zephyr/drivers/auxdisplay.h>
 
 // get the i2c0 device from dt
-static struct device *i2c0_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
+//static struct device *i2c0_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
+const struct device *const i2c0_dev = DEVICE_DT_GET(DT_CHILD(DT_NODELABEL(i2c0), quadalpha_70));
+
+//const struct device *const i2c1_dev = DEVICE_DT_GET(DT_CHILD(DT_NODELABEL(i2c1), serlcd_72));
+
+// characters
+// 14 of the 16 bits, each corresponds to one of the segments
+/*
+The drawing isn't the worlds greatest, so descriptions of some of
+the labels follow the drawing. The diagonal segments couldn't really
+have their own boxes drawn... But the following is how segments will
+correspond to bits in uint16_t that will represent a char for the 
+display
+ ┌──────────┐ 
+ │    T0    │ 
+┌└──────────┘┐
+│  │D│  │D│  │
+│U0│0│U1│1│U2│
+│  │ │  │ │  │
+└┬─┘─└┬┬┘─└─┬┘
+ │ M0 ││ M1 │ 
+┌┴─┐─┌┴┴┐─┌─┴┐
+│  │ │  │ │  │
+│L0│D│L1│D│L2│
+│  │2│  │3│  │
+└┌──────────┐┘
+ │    B0    │ 
+ └──────────┘
+
+ Colon = C
+ Period = P
+ 
+  0b C P T0 U0   D0 U1 D1 U2   M0 M1 L0 D2   L1 D3 L2 B0
+        Actually move to:
+  0b P C D0 M0   L1 U0 D3 L0   D1 B0 U1 L2   D0 U2 M1 T0
+
+
+T0 - top horizontal segment
+U0 - left upper vertical segment
+D0 - left upper diagonal segment
+U1 - middle upper vertical segment
+D1 - right upper diagonal segment
+U2 - right upper vertical segment
+M0 - left middle horizontal segment
+M1 - right middle horizontal segment
+L0 - left lower vertical segment
+D2 - left lower diagonal segment
+L1 - middle lower vertical segment
+D3 - right lower diagonal segment
+L2 - right lower vertical segment
+B0 - bottom horizontal segment
 
 
 
+character
+ ^ | bits
+   0b C P T0 U0   D0 U1 D1 U2   M0 M1 L0 D2   L1 D3 L2 B0
+        Actually move to:
+   0b P C D2 M0   L1 U0 D3 L0   D1 B0 U1 L2   D0 U2 M1 T0
+─────────────────────────
+before
+ 1 | 0000 0001 0000 0010
+ 2 | 0010 0001 1110 0011
+ 3 | 0010 0001 1100 0011
+ 4 | 0001 0001 1100 0010
+ A | 0011 0001 1110 0010
+ B | 0010 0101 1100 1011
+ C | 0011 0000 0010 0001
+ D | 0010 0101 0000 1011
 
-// display uses 24-pin package, so target address is
-// 1 1 1 0 0 A1 A0 R/W
-// where A1 and A0 are set to 0 by default, but two jumpers on the
-// board (labeled A1 and A0) can be soldered to change those to 1
-// so the address should be ((0x70 << 1) & 0x01) for read, and 
-// (0x70 << 1) for write
-#define TARGET_ADDR_WRITE       (uint16_t)(0x70)//(0x70 << 1)
-#define TARGET_ADDR_READ        (uint16_t)((0x70 << 1) & 0x01)
+ after
+ 1 | 0000 0000 0001 0100
+ 2 | 0001 0001 0101 0111
+ 3 | 0001 0000 0101 0111
+ 4 | 0001 0100 0001 0110
+ A | 0001 0101 0001 0111
+ B | 0001 1000 0111 0111
+ C | 0000 0101 0100 0001
+ D | 0000 1000 0111 0101
 
-// system startup command is 
-// 0 0 1 0 X X X S 
-// where S is 1 for turn on system oscillator and 0 is for turn off
-//#define CMD_SYS_ON              (uint8_t)0x21//0b00100001
-const uint8_t CMD_SYS_ON[] = {0b00100001};
-
-// dimming set command is 
-// 1 1 1 0 P3 P2 P1 P0
-// where P3, P2, P1, and P0 represent the duty cycle in binary with
-// P3 being the most significant bit and P0 being the least
-// duty cycle = (1+0bP3P2P1P0)/16, so if all are zero duty cycle is
-// 1/16 (min brightness) and if all are 1 it's 16/16 (max brightness)
-//#define CMD_BRIGHT_MAX          (uint8_t)0b11101111
-const uint8_t CMD_BRIGHT_MAX[] = {0b11101111};
-//#define CMD_BRIGHT_MIN          (uint8_t)0b11100000
-
-// display setup/blinking set command is
-// 1 0 0 0 X B1 B0 D
-// where B1 and B0 are the blinking frequency in binary and D is 
-// display on or off (0 for off, 1 for on) if B1 and B0 are both
-// zero, there is no blinking, if both are 1 the display will blink
-// at a rate of 2Hz
-// this command is neccessary to turn on the display (D = 1)
-//#define CMD_DISP_ON_NO_BLINK    (uint8_t)0b10000001
-const uint8_t CMD_DISP_ON_NO_BLINK[] = {0b10000001};
-
-// display data address pointer command is
-// 0 0 0 0 A3 A2 A1 A0
-// where A3, A2, A1, and A0 are the display RAM addess in binary
-// since the rest is just zero, this can be &'ed with whatever 
-// address the pointer should be changed to
-// still defining something for consistency amoung the commands
-//#define CMD_CHANGE_RAM_POINTER  (uint8_t)0b00000000
-const uint8_t CMD_CHANGE_RAM_POINTER[] = {0b00000000};
+IF THIS WAS COMPLETE, IT SHOULD INDEX S.T. THE INDEX OF A CHAR IS 
+THE SAME AS IT'S ASCII VALUE, EX charReprArr[41] = rep for "A"
+*/
+uint16_t charReprArr[10] = {
+        0b0000000000010100, // 1
+        0b0001000101000111, // 2
+        0b0001000001010111, // 3
+        0b0001010000010110, // 4
+        0b0001010100010111, // A
+        0b0001100001110111, // B
+        0b0000010101000001, // C
+        0b0000100001110101, // D
+        0b0001110000000110, // NOT E, actually Y
+        0b0000000000000000  // space
+};
 
 int main(void)
 {       
@@ -62,70 +108,17 @@ int main(void)
         k_msleep(500);
 
         if (!device_is_ready(i2c0_dev)) {
-                printk("I2C device not ready :(\n");
+                printk("I2C_0 device not ready :(\n");
                 return 0;
         } else {
-                printk("I2C device is ready!\n");
+                printk("I2C_0 device is ready!\n");
         }
 
+        uint8_t data[4] = {0,0,0,0};
+
+        snprintk(data, sizeof(data), "ABCD");
+        auxdisplay_write(i2c0_dev, data, strlen(data));
+        k_msleep(3000);
+        auxdisplay_clear(i2c0_dev);
         
-
-        k_msleep(500);
-
-
-        // Initialization
-
-        printk("Turn on system oscillator\n");
-        // write command to turn on system oscillator
-        //const uint8_t* cmd_start[1] = {(uint8_t)0x21};
-        i2c_write(
-                i2c0_dev,
-                CMD_SYS_ON,
-                sizeof(CMD_SYS_ON),
-                TARGET_ADDR_WRITE
-        );
-
-        // might need to do ROW/INT set here, but arduino lib 
-        // does not do that so I won't either
-
-        printk("Set LED brightness\n");
-        // set LED brightness
-        i2c_write(
-                i2c0_dev,
-                CMD_BRIGHT_MAX,
-                sizeof(CMD_BRIGHT_MAX),
-                TARGET_ADDR_WRITE
-        );
-
-        printk("Turn on display, set blinking to 0Hz\n");
-        // turn on display, set blinking rate to zero
-        i2c_write(
-                i2c0_dev,
-                CMD_DISP_ON_NO_BLINK,
-                sizeof(CMD_DISP_ON_NO_BLINK),
-                TARGET_ADDR_WRITE
-        );
-
-
-
-        // Display Data Rewrite
-        
-        // buffer to hold RAM address and data to be written
-        uint8_t writeBuf[2] = {CMD_CHANGE_RAM_POINTER, 0xFF};
-
-        // set RAM address and write data
-        printk("Write 0xFF to address 0x00 in RAM\n");
-        i2c_write(
-                i2c0_dev,
-                writeBuf,
-                sizeof(writeBuf),
-                TARGET_ADDR_WRITE
-        );
-
-        while (1) {
-                k_msleep(9999999);
-        }
-
-
-        return 0;
 }

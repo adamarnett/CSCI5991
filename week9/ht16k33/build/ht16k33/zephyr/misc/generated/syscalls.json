@@ -121,6 +121,158 @@
     ],
     [
         [
+            "int auxdisplay_display_on",
+            "const struct device *dev"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_display_off",
+            "const struct device *dev"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_cursor_set_enabled",
+            "const struct device *dev,\n\t\t\t\t\t    bool enabled"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_position_blinking_set_enabled",
+            "const struct device *dev,\n\t\t\t\t\t\t       bool enabled"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_cursor_shift_set",
+            "const struct device *dev,\n\t\t\t\t\t  uint8_t direction, bool display_shift"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_cursor_position_set",
+            "const struct device *dev,\n\t\t\t\t\t     enum auxdisplay_position type,\n\t\t\t\t\t     int16_t x, int16_t y"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_cursor_position_get",
+            "const struct device *dev,\n\t\t\t\t\t     int16_t *x, int16_t *y"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_display_position_set",
+            "const struct device *dev,\n\t\t\t\t\t      enum auxdisplay_position type,\n\t\t\t\t\t      int16_t x, int16_t y"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_display_position_get",
+            "const struct device *dev,\n\t\t\t\t\t      int16_t *x, int16_t *y"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_capabilities_get",
+            "const struct device *dev,\n\t\t\t\t\t  struct auxdisplay_capabilities *capabilities"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_clear",
+            "const struct device *dev"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_brightness_get",
+            "const struct device *dev,\n\t\t\t\t\tuint8_t *brightness"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_brightness_set",
+            "const struct device *dev,\n\t\t\t\t\tuint8_t brightness"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_backlight_get",
+            "const struct device *dev,\n\t\t\t\t       uint8_t *backlight"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_backlight_set",
+            "const struct device *dev,\n\t\t\t\t       uint8_t backlight"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_is_busy",
+            "const struct device *dev"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_custom_character_set",
+            "const struct device *dev,\n\t\t\t\t\t      struct auxdisplay_character *character"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_write",
+            "const struct device *dev, const uint8_t *data,\n\t\t\t       uint16_t len"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
+            "int auxdisplay_custom_command",
+            "const struct device *dev,\n\t\t\t\t\tstruct auxdisplay_custom_data *data"
+        ],
+        "auxdisplay.h",
+        true
+    ],
+    [
+        [
             "int gpio_pin_interrupt_configure",
             "const struct device *port,\n\t\t\t\t\t   gpio_pin_t pin,\n\t\t\t\t\t   gpio_flags_t flags"
         ],
@@ -1293,158 +1445,6 @@
             "const struct device *dev,\n\t\t\t     const struct adc_sequence *sequence,\n\t\t\t     struct k_poll_signal *async"
         ],
         "adc.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_display_on",
-            "const struct device *dev"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_display_off",
-            "const struct device *dev"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_cursor_set_enabled",
-            "const struct device *dev,\n\t\t\t\t\t    bool enabled"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_position_blinking_set_enabled",
-            "const struct device *dev,\n\t\t\t\t\t\t       bool enabled"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_cursor_shift_set",
-            "const struct device *dev,\n\t\t\t\t\t  uint8_t direction, bool display_shift"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_cursor_position_set",
-            "const struct device *dev,\n\t\t\t\t\t     enum auxdisplay_position type,\n\t\t\t\t\t     int16_t x, int16_t y"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_cursor_position_get",
-            "const struct device *dev,\n\t\t\t\t\t     int16_t *x, int16_t *y"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_display_position_set",
-            "const struct device *dev,\n\t\t\t\t\t      enum auxdisplay_position type,\n\t\t\t\t\t      int16_t x, int16_t y"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_display_position_get",
-            "const struct device *dev,\n\t\t\t\t\t      int16_t *x, int16_t *y"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_capabilities_get",
-            "const struct device *dev,\n\t\t\t\t\t  struct auxdisplay_capabilities *capabilities"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_clear",
-            "const struct device *dev"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_brightness_get",
-            "const struct device *dev,\n\t\t\t\t\tuint8_t *brightness"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_brightness_set",
-            "const struct device *dev,\n\t\t\t\t\tuint8_t brightness"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_backlight_get",
-            "const struct device *dev,\n\t\t\t\t       uint8_t *backlight"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_backlight_set",
-            "const struct device *dev,\n\t\t\t\t       uint8_t backlight"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_is_busy",
-            "const struct device *dev"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_custom_character_set",
-            "const struct device *dev,\n\t\t\t\t\t      struct auxdisplay_character *character"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_write",
-            "const struct device *dev, const uint8_t *data,\n\t\t\t       uint16_t len"
-        ],
-        "auxdisplay.h",
-        false
-    ],
-    [
-        [
-            "int auxdisplay_custom_command",
-            "const struct device *dev,\n\t\t\t\t\tstruct auxdisplay_custom_data *data"
-        ],
-        "auxdisplay.h",
         false
     ],
     [

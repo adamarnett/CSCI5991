@@ -7,6 +7,25 @@
  */
 
 /* Symbol declarations */
+extern void * const z_impl_auxdisplay_backlight_get;
+extern void * const z_impl_auxdisplay_backlight_set;
+extern void * const z_impl_auxdisplay_brightness_get;
+extern void * const z_impl_auxdisplay_brightness_set;
+extern void * const z_impl_auxdisplay_capabilities_get;
+extern void * const z_impl_auxdisplay_clear;
+extern void * const z_impl_auxdisplay_cursor_position_get;
+extern void * const z_impl_auxdisplay_cursor_position_set;
+extern void * const z_impl_auxdisplay_cursor_set_enabled;
+extern void * const z_impl_auxdisplay_cursor_shift_set;
+extern void * const z_impl_auxdisplay_custom_character_set;
+extern void * const z_impl_auxdisplay_custom_command;
+extern void * const z_impl_auxdisplay_display_off;
+extern void * const z_impl_auxdisplay_display_on;
+extern void * const z_impl_auxdisplay_display_position_get;
+extern void * const z_impl_auxdisplay_display_position_set;
+extern void * const z_impl_auxdisplay_is_busy;
+extern void * const z_impl_auxdisplay_position_blinking_set_enabled;
+extern void * const z_impl_auxdisplay_write;
 extern void * const z_impl_device_get_binding;
 extern void * const z_impl_device_get_by_dt_nodelabel;
 extern void * const z_impl_device_init;
@@ -163,6 +182,25 @@ extern void * const z_impl_zephyr_read_stdin;
 extern void * const z_impl_zephyr_write_stdout;
 
 /* Exported symbols */
+EXPORT_SYMBOL(z_impl_auxdisplay_backlight_get);
+EXPORT_SYMBOL(z_impl_auxdisplay_backlight_set);
+EXPORT_SYMBOL(z_impl_auxdisplay_brightness_get);
+EXPORT_SYMBOL(z_impl_auxdisplay_brightness_set);
+EXPORT_SYMBOL(z_impl_auxdisplay_capabilities_get);
+EXPORT_SYMBOL(z_impl_auxdisplay_clear);
+EXPORT_SYMBOL(z_impl_auxdisplay_cursor_position_get);
+EXPORT_SYMBOL(z_impl_auxdisplay_cursor_position_set);
+EXPORT_SYMBOL(z_impl_auxdisplay_cursor_set_enabled);
+EXPORT_SYMBOL(z_impl_auxdisplay_cursor_shift_set);
+EXPORT_SYMBOL(z_impl_auxdisplay_custom_character_set);
+EXPORT_SYMBOL(z_impl_auxdisplay_custom_command);
+EXPORT_SYMBOL(z_impl_auxdisplay_display_off);
+EXPORT_SYMBOL(z_impl_auxdisplay_display_on);
+EXPORT_SYMBOL(z_impl_auxdisplay_display_position_get);
+EXPORT_SYMBOL(z_impl_auxdisplay_display_position_set);
+EXPORT_SYMBOL(z_impl_auxdisplay_is_busy);
+EXPORT_SYMBOL(z_impl_auxdisplay_position_blinking_set_enabled);
+EXPORT_SYMBOL(z_impl_auxdisplay_write);
 EXPORT_SYMBOL(z_impl_device_get_binding);
 EXPORT_SYMBOL(z_impl_device_get_by_dt_nodelabel);
 EXPORT_SYMBOL(z_impl_device_init);

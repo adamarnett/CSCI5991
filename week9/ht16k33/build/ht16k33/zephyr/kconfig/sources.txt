@@ -621,6 +621,7 @@
 /home/adam/ncsII/ncs/main/zephyr/drivers/auxdisplay/Kconfig.itron
 /home/adam/ncsII/ncs/main/zephyr/drivers/auxdisplay/Kconfig.jhd1313
 /home/adam/ncsII/ncs/main/zephyr/drivers/auxdisplay/Kconfig.pt6314
+/home/adam/ncsII/ncs/main/zephyr/drivers/auxdisplay/Kconfig.quadalpha
 /home/adam/ncsII/ncs/main/zephyr/drivers/auxdisplay/Kconfig.serlcd
 /home/adam/ncsII/ncs/main/zephyr/drivers/bbram/Kconfig
 /home/adam/ncsII/ncs/main/zephyr/drivers/bbram/Kconfig.bbram_emul

@@ -318,6 +318,25 @@ rule C_STATIC_LIBRARY_LINKER__drivers__interrupt_controller_
 #############################################
 # Rule for compiling C files.
 
+rule C_COMPILER__drivers__auxdisplay_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = ccache /home/adam/ncs/toolchains/b77d8c1312/opt/zephyr-sdk/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER__drivers__auxdisplay_
+  command = $PRE_LINK && ccache /home/adam/ncs/toolchains/b77d8c1312/usr/local/bin/cmake -E rm -f $TARGET_FILE && ccache /home/adam/ncs/toolchains/b77d8c1312/opt/zephyr-sdk/arm-zephyr-eabi/bin/arm-zephyr-eabi-ar qc $TARGET_FILE $LINK_FLAGS $in && ccache /home/adam/ncs/toolchains/b77d8c1312/opt/zephyr-sdk/arm-zephyr-eabi/bin/arm-zephyr-eabi-ranlib $TARGET_FILE && $POST_BUILD
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
 rule C_COMPILER__drivers__clock_control_
   depfile = $DEP_FILE
   deps = gcc

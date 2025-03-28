@@ -1,0 +1,8 @@
+
+config AUXDISPLAY_QUADALPHA
+	bool "SparkFun Quad Alphnumeric 14-segment driver"
+	default y
+	select I2C
+	depends on DT_HAS_SPARKFUN_QUADALPHA_ENABLED
+	help
+	  Enable driver for SparkFun Quad Alphnumeric.

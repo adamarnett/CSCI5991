@@ -14,6 +14,25 @@ static void * const no_syscall_impl Z_GENERIC_SECTION(llext_no_syscall_impl);
  * linker outside this file will be exported as NULL and simply fail when
  * an extension requiring them is loaded.
  */
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_backlight_get;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_backlight_set;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_brightness_get;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_brightness_set;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_capabilities_get;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_clear;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_cursor_position_get;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_cursor_position_set;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_cursor_set_enabled;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_cursor_shift_set;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_custom_character_set;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_custom_command;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_display_off;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_display_on;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_display_position_get;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_display_position_set;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_is_busy;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_position_blinking_set_enabled;
+extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_auxdisplay_write;
 extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_device_get_binding;
 extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_device_get_by_dt_nodelabel;
 extern __weak ALIAS_OF(no_syscall_impl) void * const z_impl_device_init;

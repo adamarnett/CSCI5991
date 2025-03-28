@@ -67,6 +67,82 @@ uintptr_t z_mrsh_log_frontend_filter_set(uintptr_t arg1, uintptr_t arg2, uintptr
          uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
 
 __weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_display_on(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_display_off(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_cursor_set_enabled(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_position_blinking_set_enabled(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_cursor_shift_set(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_cursor_position_set(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_cursor_position_get(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_display_position_set(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_display_position_get(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_capabilities_get(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_clear(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_brightness_get(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_brightness_set(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_backlight_get(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_backlight_set(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_is_busy(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_custom_character_set(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_write(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
+uintptr_t z_mrsh_auxdisplay_custom_command(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
+         uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
+
+__weak ALIAS_OF(handler_no_syscall)
 uintptr_t z_mrsh_gpio_pin_interrupt_configure(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
          uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
 
@@ -629,6 +705,25 @@ const _k_syscall_handler_t _k_syscall_table[K_SYSCALL_LIMIT] = {
 	[K_SYSCALL_LOG_BUFFERED_CNT] = z_mrsh_log_buffered_cnt,
 	[K_SYSCALL_LOG_FILTER_SET] = z_mrsh_log_filter_set,
 	[K_SYSCALL_LOG_FRONTEND_FILTER_SET] = z_mrsh_log_frontend_filter_set,
+	[K_SYSCALL_AUXDISPLAY_DISPLAY_ON] = z_mrsh_auxdisplay_display_on,
+	[K_SYSCALL_AUXDISPLAY_DISPLAY_OFF] = z_mrsh_auxdisplay_display_off,
+	[K_SYSCALL_AUXDISPLAY_CURSOR_SET_ENABLED] = z_mrsh_auxdisplay_cursor_set_enabled,
+	[K_SYSCALL_AUXDISPLAY_POSITION_BLINKING_SET_ENABLED] = z_mrsh_auxdisplay_position_blinking_set_enabled,
+	[K_SYSCALL_AUXDISPLAY_CURSOR_SHIFT_SET] = z_mrsh_auxdisplay_cursor_shift_set,
+	[K_SYSCALL_AUXDISPLAY_CURSOR_POSITION_SET] = z_mrsh_auxdisplay_cursor_position_set,
+	[K_SYSCALL_AUXDISPLAY_CURSOR_POSITION_GET] = z_mrsh_auxdisplay_cursor_position_get,
+	[K_SYSCALL_AUXDISPLAY_DISPLAY_POSITION_SET] = z_mrsh_auxdisplay_display_position_set,
+	[K_SYSCALL_AUXDISPLAY_DISPLAY_POSITION_GET] = z_mrsh_auxdisplay_display_position_get,
+	[K_SYSCALL_AUXDISPLAY_CAPABILITIES_GET] = z_mrsh_auxdisplay_capabilities_get,
+	[K_SYSCALL_AUXDISPLAY_CLEAR] = z_mrsh_auxdisplay_clear,
+	[K_SYSCALL_AUXDISPLAY_BRIGHTNESS_GET] = z_mrsh_auxdisplay_brightness_get,
+	[K_SYSCALL_AUXDISPLAY_BRIGHTNESS_SET] = z_mrsh_auxdisplay_brightness_set,
+	[K_SYSCALL_AUXDISPLAY_BACKLIGHT_GET] = z_mrsh_auxdisplay_backlight_get,
+	[K_SYSCALL_AUXDISPLAY_BACKLIGHT_SET] = z_mrsh_auxdisplay_backlight_set,
+	[K_SYSCALL_AUXDISPLAY_IS_BUSY] = z_mrsh_auxdisplay_is_busy,
+	[K_SYSCALL_AUXDISPLAY_CUSTOM_CHARACTER_SET] = z_mrsh_auxdisplay_custom_character_set,
+	[K_SYSCALL_AUXDISPLAY_WRITE] = z_mrsh_auxdisplay_write,
+	[K_SYSCALL_AUXDISPLAY_CUSTOM_COMMAND] = z_mrsh_auxdisplay_custom_command,
 	[K_SYSCALL_GPIO_PIN_INTERRUPT_CONFIGURE] = z_mrsh_gpio_pin_interrupt_configure,
 	[K_SYSCALL_GPIO_PIN_CONFIGURE] = z_mrsh_gpio_pin_configure,
 	[K_SYSCALL_GPIO_PORT_GET_DIRECTION] = z_mrsh_gpio_port_get_direction,
