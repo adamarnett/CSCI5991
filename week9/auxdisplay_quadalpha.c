@@ -14,15 +14,6 @@
 LOG_MODULE_REGISTER(auxdisplay_quadalpha, CONFIG_AUXDISPLAY_LOG_LEVEL);
 
 /*
- * display uses 24-pin package, so target address is
- * 1 1 1 0 0 A1 A0
- * where A1 and A0 are set to 0 by default, but two jumpers on the
- * board (labeled A1 and A0) can be soldered to change those to 1
-*/
-//#define TARGET_ADDR_WRITE       (uint16_t)(0x70)
-
-
-/*
  * system startup command is 
  * 0 0 1 0 X X X S 
  * where S is 1 for turn on system oscillator and 0 is for turn off
@@ -61,6 +52,7 @@ LOG_MODULE_REGISTER(auxdisplay_quadalpha, CONFIG_AUXDISPLAY_LOG_LEVEL);
 # define QUADALPHA_CUSTOM_CHAR_WIDTH 0
 # define QUADALPHA_CUSTOM_CHAR_HEIGHT 0
 
+// 
 struct auxdisplay_quadalpha_data {
 	bool power;
 };
@@ -105,7 +97,9 @@ static int auxdisplay_quadalpha_display_on(const struct device *dev) {
 }
 
 static int auxdisplay_quadalpha_write(const struct device *dev, const uint8_t *text, uint16_t len) {
-
+    
+    // this should be moved to an enum
+    // representations of all characters that can (currently) be displayed
     uint16_t charReprArr[10] = {
         0b0000000000010100, // 1
         0b0001000101000111, // 2
@@ -118,17 +112,18 @@ static int auxdisplay_quadalpha_write(const struct device *dev, const uint8_t *t
         0b0001110000000110, // NOT E, actually Y
         0b0000000000000000  // space
     };
-
+    
+    // get config from device so we can access the i2c bus in i2c_write_dt
     const struct auxdisplay_quadalpha_config *config = dev->config;
 
-    // error checking
+    // error checking, don't want to try to write to segments that
+    // don't exist
     if (len > 4) {
-        return -1;
+        // return invalid argument error
+        return -EINVAL;
     }
 
-    //printk("HELLO\n");
-
-    // buffer to hold write address [0] and data about display
+    // buffer to hold write address [0] and data about display [1-13]
     uint8_t writeBuf[14] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
     // int for error checking
@@ -152,20 +147,6 @@ static int auxdisplay_quadalpha_write(const struct device *dev, const uint8_t *t
     // reset write address
     writeBuf[0] = 0;
 
-    //printk("readbuf:\n");
-    //for (int i = 0; i < 14; i++) {
-    //printk("readbuf[%d] = [", i);
-    //for (int j = 0; j < 8; j++) {
-    //        printk(
-    //                "[%d]",
-    //                (writeBuf[i] >> j) & 0x01
-    //        );
-    //}
-    //printk("]\n");
-    //}
-
-    //printk("HELLO AGAIN\n");
-
     // overwrite what's currently on display with what we 
     // want to write
     uint16_t charRep = 0;
@@ -174,15 +155,18 @@ static int auxdisplay_quadalpha_write(const struct device *dev, const uint8_t *t
             // incoming data should be ascii values
             //uint16_t charRep = charReprArr[text[i]];
 
-            // incomplete stupid version
-            //printk("text[%d] = [%d]\n", i, text[i]);
+            // incomplete version because I don't want to make 
+            // representations of all the different characters it 
+            // takes foreverrrrr
+            // so 1-4, A-D, and Y (as E) are supported
+            // Y is supported as E so I could print YAY without
+            // adding another if
             if (text[i] >= 65 && text[i] <= 69) {
                     charRep = charReprArr[text[i]-61];
             }
-            if (text[i] >= 49 && text[i] <= 52) {
+            else if (text[i] >= 49 && text[i] <= 52) {
                     charRep = charReprArr[text[i]-49];
             }
-            //printk("char rep = [%d]\n", charRep);
             for (int j = 0; j < 14; j++) {
 
                     // for bits 0-13
@@ -191,24 +175,26 @@ static int auxdisplay_quadalpha_write(const struct device *dev, const uint8_t *t
                     // also note that writeBuf is not 0 indexed because the 
                     // starting write address must come before the data
 
-                    // also clear any bit that may or may not be 
+                    // also also, clear any bit that may or may not be 
                     // set, don't want residual segments illuminated
                     // from last write to display
-                    //printk("setting writebuf[%d] to &= [%d]\n", ((j - (j%2)) + 1), (~((0x01) << (((j%2) * 4) + i))));
+                    
+                    // this clears last segments
                     writeBuf[(j - (j%2)) + 1] &= ~((0x01) << (((j%2) * 4) + i));
+                    
+                    // this illuminates new segments if necessary
                     if ((charRep & 0x01)) {
-                            //printk("bit %d is set in charRep\n", j);
-
-                            //printk("setting writebuf[%d] to |= [%d]\n", ((j - (j%2)) + 1), ((0x01) << (((j%2) * 4) + i)));
                             writeBuf[(j - (j%2)) + 1] |= ((0x01) << (((j%2) * 4) + i));
                     }
-
+                    
+                    // move to the next bit in the representation
                     charRep = charRep >> 1;
             }
-
+            // reset the representation
             charRep = 0;
     }
-
+    
+    // re-write the RAM
     err = i2c_write_dt(
             &config->bus,
             writeBuf,
@@ -221,8 +207,7 @@ static int auxdisplay_quadalpha_write(const struct device *dev, const uint8_t *t
 
 static int auxdisplay_quadalpha_clear(const struct device *dev) {
 
-    const struct auxdisplay_quadalpha_config *config = dev->config;
-
+    // write 4 spaces to the display
     int err = auxdisplay_quadalpha_write(
         dev,
         "    ",
@@ -233,13 +218,16 @@ static int auxdisplay_quadalpha_clear(const struct device *dev) {
 }
 
 static int auxdisplay_quadalpha_init(const struct device *dev) {
-
+    
+    // get config from dt device to access i2c bus
     const struct auxdisplay_quadalpha_config *config = dev->config;
+    // get data to set power variable to true
     struct auxdisplay_quadalpha_data *data = dev->data;
-
     data->power = true;
-
+    
+    // is the i2c_spec in devicetree ready?
     if (!device_is_ready(config->bus.bus)) {
+        // if not return no such device error
         return -ENODEV;
     }
 
@@ -251,13 +239,21 @@ static int auxdisplay_quadalpha_init(const struct device *dev) {
         QUADALPHA_SYS_ON,
         sizeof(QUADALPHA_SYS_ON)
     );
-
+    
+    // if can't initialize, likely due to some kind of i2c
+    // communication error
     if (err) {
+        // return IO error
         return -EIO;
     }
 
     return 0;
 }
+
+// A bunch of funcitons that I either can't or haven't bothered to implement. They seem
+// to need to be defined to allow the device api struct to be aligned correctly in memory
+// however, so here they are. They don't match some function signatures for the generic API,
+// so they generate some compiler warnings.
 
 static int auxdisplay_quadalpha_display_off(const struct device *dev) {
 
@@ -294,7 +290,8 @@ static int auxdisplay_quadalpha_custom_character_set(const struct device *dev) {
     return 0;
 }
 
-
+// init the quadalpha implementation of the auxdisplay generic API. might have
+// used incorrect terminology there, but I know what it's doing in my head.
 static DEVICE_API(auxdisplay, auxdisplay_quadalpha_auxdisplay_api) = {
     .display_on = auxdisplay_quadalpha_display_on,
     .display_off = auxdisplay_quadalpha_display_off,
