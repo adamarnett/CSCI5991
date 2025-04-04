@@ -1,0 +1,13 @@
+# Target labels
+ ac780s
+# Source files and their labels
+/home/adam/zephyrProjects/ac780s/build/_sysbuild/sysbuild/images/CMakeFiles/ac780s
+/home/adam/zephyrProjects/ac780s/build/_sysbuild/sysbuild/images/CMakeFiles/ac780s.rule
+/home/adam/zephyrProjects/ac780s/build/_sysbuild/sysbuild/images/CMakeFiles/ac780s-complete.rule
+/home/adam/zephyrProjects/ac780s/build/_sysbuild/sysbuild/images/ac780s-prefix/src/ac780s-stamp/ac780s-build.rule
+/home/adam/zephyrProjects/ac780s/build/_sysbuild/sysbuild/images/ac780s-prefix/src/ac780s-stamp/ac780s-configure.rule
+/home/adam/zephyrProjects/ac780s/build/_sysbuild/sysbuild/images/ac780s-prefix/src/ac780s-stamp/ac780s-download.rule
+/home/adam/zephyrProjects/ac780s/build/_sysbuild/sysbuild/images/ac780s-prefix/src/ac780s-stamp/ac780s-install.rule
+/home/adam/zephyrProjects/ac780s/build/_sysbuild/sysbuild/images/ac780s-prefix/src/ac780s-stamp/ac780s-mkdir.rule
+/home/adam/zephyrProjects/ac780s/build/_sysbuild/sysbuild/images/ac780s-prefix/src/ac780s-stamp/ac780s-patch.rule
+/home/adam/zephyrProjects/ac780s/build/_sysbuild/sysbuild/images/ac780s-prefix/src/ac780s-stamp/ac780s-update.rule
