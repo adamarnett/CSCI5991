@@ -7,19 +7,7 @@
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/drivers/auxdisplay.h>
 
-
-//#define AC780S_FUNC_SET 0x38        // 0b 0011 1000
-//#define AC780S_FUNC_SET_DELAY 100   // 100 microseconds
-//#define AC780S_DISP_ON 0x0C         // 0b 0000 1100
-//#define AC780S_DISP_ON_DELAY 100    // 100 microseconds
-//#define AC780S_ENTRY_MODE 0x06      // 0b 0000 0111
-//#define AC780S_ENTRY_MODE_DELAY 100 // 100 microseconds
-//#define AC780S_RET_HOME 0x02        // 0b 0000 0010
-//#define AC780S_CLEAR_DISP 0x01      // 0b 0000 0001
-
-//#define AC780S_CTL_WRITE_INST 0x00  // 0b 1100 0000
-//#define AC780S_CTL_WRITE_DISP 0x40  // 0b 1100 0000
-
+// TODO this will depend on devicetree...
 #define AC780S_CUSTOM_CHAR_HEIGHT 8
 #define AC780S_CUSTOM_CHAR_WIDTH 5
 #define AC780S_CUSTOM_CHAR_MAX_COUNT 0
@@ -144,26 +132,12 @@ static int auxdisplay_ac780s_send_command(const struct device *dev,
 
 static int auxdisplay_ac780s_send_display_state(const struct device *dev,
     const struct auxdisplay_ac780s_data *data) {
-    
-    return 0;
-}
 
-static int auxdisplay_ac780s_display_on(const struct device *dev) {
+    uint8_t command = AC780S_DISPLAY_ON_OFF;
 
-    // TODO --> lots of very similar code between this, display off, cursor
-    // enabled, blinking enabled functions... perhaps make another and just
-    // have each of these set the thing in dev->data and another common 
-    // function react by sending the actual display_on_off command? 
-    // yes this is the way but I want the more striaghtforward way to work first...
-
-    struct auxdisplay_ac780s_data *data = dev->data;
-
-    data->power = true;
-
-    // set the power bit to on
-    uint8_t command = (AC780S_DISPLAY_ON_OFF | AC780S_DISPLAY_ON_OFF_POWER_BIT);
-
-    // if cursor or blinking enabled, set the respective bits to 1
+    if (data->power) {
+        command |= AC780S_DISPLAY_ON_OFF_POWER_BIT;
+    }
     if (data->cursor) {
         command |= AC780S_DISPLAY_ON_OFF_CURSOR_BIT;
     }
@@ -175,6 +149,20 @@ static int auxdisplay_ac780s_display_on(const struct device *dev) {
         dev,
         command
     );
+    
+    return err;
+}
+
+static int auxdisplay_ac780s_display_on(const struct device *dev) {
+
+    struct auxdisplay_ac780s_data *data = dev->data;
+
+    data->power = true;
+
+    int err = auxdisplay_ac780s_send_display_state(
+        dev,
+        data
+    );
 
     return err;
 }
@@ -185,22 +173,9 @@ static int auxdisplay_ac780s_display_off(const struct device *dev) {
 
     data->power = false;
 
-    // do not set power bit to 1
-    uint8_t command = AC780S_DISPLAY_ON_OFF;
-
-    // if cursor or blinking enabled, set the respective bits to 1
-    // TODO --> does this matter? Why would it if the display is getting shut off?
-    // is there a situation in which it could matter?
-    if (data->cursor) {
-        command |= AC780S_DISPLAY_ON_OFF_CURSOR_BIT;
-    }
-    if (data->blinking) {
-        command |= AC780S_DISPLAY_ON_OFF_BLINKING_BIT;
-    }
-
-    int err = auxdisplay_ac780s_send_command(
+    int err = auxdisplay_ac780s_send_display_state(
         dev,
-        command
+        data
     );
 
     return err;
@@ -213,22 +188,9 @@ static int auxdisplay_ac780s_cursor_set_enabled(const struct device *dev, bool e
 
     data->cursor = enable;
 
-    uint8_t command = AC780S_DISPLAY_ON_OFF;
-
-    // if cursor or blinking enabled, set the respective bits to 1
-    if (data->power) {
-        command |= AC780S_DISPLAY_ON_OFF_POWER_BIT;
-    }
-    if (enable) {
-        command |= AC780S_DISPLAY_ON_OFF_CURSOR_BIT;
-    }
-    if (data->blinking) {
-        command |= AC780S_DISPLAY_ON_OFF_BLINKING_BIT;
-    }
-
-    int err = auxdisplay_ac780s_send_command(
+    int err = auxdisplay_ac780s_send_display_state(
         dev,
-        command
+        data
     );
 
     return err;
@@ -240,22 +202,9 @@ static int auxdisplay_ac780s_position_blinking_set_enabled(const struct device *
 
     data->blinking = enable;
 
-    uint8_t command = AC780S_DISPLAY_ON_OFF;
-
-    // if cursor or blinking enabled, set the respective bits to 1
-    if (data->power) {
-        command |= AC780S_DISPLAY_ON_OFF_POWER_BIT;
-    }
-    if (data->cursor) {
-        command |= AC780S_DISPLAY_ON_OFF_CURSOR_BIT;
-    }
-    if (enable) {
-        command |= AC780S_DISPLAY_ON_OFF_BLINKING_BIT;
-    }
-
-    int err = auxdisplay_ac780s_send_command(
+    int err = auxdisplay_ac780s_send_display_state(
         dev,
-        command
+        data
     );
 
     return err;
@@ -283,6 +232,7 @@ static int auxdisplay_ac780s_cursor_position_set(const struct device *dev,
         // for error checking
         int err = 0;
 
+        // TODO finish the rest of the options
         // if moving from 0,0
         if (type == AUXDISPLAY_POSITION_ABSOLUTE) {
 
@@ -336,7 +286,6 @@ static int auxdisplay_ac780s_cursor_position_set(const struct device *dev,
             data->cursor_y = y;
         }
     
-
         return err;
 
 }
@@ -359,8 +308,6 @@ static int auxdisplay_ac780s_capabilities_get(const struct device *dev,
     void* err = memcpy(capabilities, &config->capabilities, sizeof(capabilities));
 
     if (err != capabilities) {
-        // TODO --> is EFAULT (bad address) ok here?
-        // or is EINVAL (invalid argument) ok?
         return -EINVAL;
     }
     
@@ -368,8 +315,6 @@ static int auxdisplay_ac780s_capabilities_get(const struct device *dev,
 }
 
 static int auxdisplay_ac780s_clear(const struct device *dev) {
-
-    //const struct auxdisplay_ac780s_config *config = dev->config;
 
     int err = auxdisplay_ac780s_send_command(
         dev,
@@ -383,6 +328,9 @@ static int auxdisplay_ac780s_clear(const struct device *dev) {
 static int auxdisplay_ac780s_custom_character_set(const struct device *dev,
     struct auxdisplay_character *character) {
 
+        // TODO --> ...this whole function. Should be done after font type is
+        // added to the devicetree stuff, since this will depend heavily on it
+
     return 0;
 }
 
@@ -395,6 +343,7 @@ static void auxdisplay_ac780s_advance_current_position(const struct device *dev)
 	const uint16_t rows = capabilities.rows;
 
     // TODO check shift direction? might be a setting that goes left not right
+    // with how it's initialized it is perfect for now
     if ((data->cursor_x++) >= cols) {
         data->cursor_x = 0;
         if ((data->cursor_y++) >= rows) {
@@ -407,10 +356,10 @@ static void auxdisplay_ac780s_advance_current_position(const struct device *dev)
 static int auxdisplay_ac780s_write(const struct device *dev, const uint8_t *text, uint16_t len) {
 
     const struct auxdisplay_ac780s_config *config = dev->config;
-    struct auxdisplay_ac780s_data *data = dev->data;
-
-    //AC780S_CTL_WRITE_DISP or something = 0x40
-    uint8_t buf[2] = {0x40, 0x00};
+    const struct auxdisplay_capabilities capabilities = config->capabilities;
+    
+    // TODO clarify this (why 0x40?)
+    uint8_t buf[2] = {0x40, 0x10};
 
     int err = 0;
 
@@ -435,101 +384,21 @@ static int auxdisplay_ac780s_write(const struct device *dev, const uint8_t *text
 
         auxdisplay_ac780s_advance_current_position(dev);
 
-        //printk("\ncusror_x = [%d]\n", data->cursor_x);
-        //printk("cusror_y = [%d]\n", data->cursor_y);
+        int16_t x = 0 , y = 0;
+        auxdisplay_ac780s_cursor_position_get(dev, &x, &y);
 
+        if (x >= (capabilities.columns)) {
+            auxdisplay_ac780s_cursor_position_set(
+                dev, 
+                AUXDISPLAY_POSITION_ABSOLUTE,
+                0,
+                ((y+1)%capabilities.rows)
+            );
+        }
 
         // wait for write data to RAM command to execute
         k_usleep(100);
     }
-
-
-    /*uint8_t cmds[] = {
-        AC780S_CTL_WRITE_DISP,
-        0x59, // Y
-        0x41, // A
-        0x59, // Y
-        0x21, // !
-        //0x10, // 
-        //0x3A, // :
-        //0x29, // )
-        //0x10, //  
-    };
-
-    uint8_t cmdsII[] = {
-        AC780S_CTL_WRITE_INST,
-        //(AC780S_DDRAM_ADDRESS_SET | 0x28)
-        (0x80 | 0x28)
-    };
-    
-    uint8_t cmdsIII[] = {
-        AC780S_CTL_WRITE_DISP,
-        0x4F, // 0
-        0x5F, // _
-        0x6F, // o
-        0x10, //  
-        0x4F, // 0
-        0x5F, // _
-        0x6F, // o
-        0x10, //  
-        0x4F, // 0
-        0x5F, // _
-        0x6F, // o
-        0x10, //  
-        0x4F, // 0
-        0x5F, // _
-        0x6F, // o
-        0x10, //  
-        0x21, // !
-        0x21, // !
-        0x21, // !
-        0x21, // !
-        0x21, // !
-    };
-
-    i2c_write_dt(
-        &config->bus,
-        cmds,
-        sizeof(cmds)
-    );
-
-    k_usleep(100);
-
-    //uint8_t writeMe = 0x00;
-//
-    //while (1) {
-//
-    //    uint8_t cmdsIV[] = {
-    //        AC780S_CTL_WRITE_DISP,
-    //        writeMe
-    //    };
-//
-    //    i2c_write_dt(
-    //        &config->bus,
-    //        cmdsIV,
-    //        sizeof(cmdsIV)
-    //    );
-//
-    //    printk("Writing [%d]", writeMe);
-//
-    //    writeMe++;
-//
-    //    k_msleep(500);
-    //}
-
-    i2c_write_dt(
-        &config->bus,
-        cmdsII,
-        sizeof(cmdsII)
-    );
-
-    k_usleep(100);
-
-    i2c_write_dt(
-        &config->bus,
-        cmdsIII,
-        sizeof(cmdsIII)
-    );*/
 
     return err;
 
@@ -538,38 +407,29 @@ static int auxdisplay_ac780s_write(const struct device *dev, const uint8_t *text
 static int auxdisplay_ac780s_init(const struct device *dev) {
 
     const struct auxdisplay_ac780s_config *config = dev->config;
-
+    struct auxdisplay_ac780s_data *data = dev->data;
 
     // TODO pull probably everything out of here lol
     // or maybe not? perhaps the initialization procedure in the datasheet
     // needs to be adhered to 100% of the time and is not an example?
-
+    // the commands should be replaced with calls to send_command, as was done
+    // with the function set command. That one can probably stay within this
+    // function, but the others might be able to be taken out. Not sure yet
 
 	if (!device_is_ready(config->bus.bus)) {
 		return -ENODEV;
 	}
 
-    //uint8_t cmdf[] = {
-    //        AC780S_CTL_WRITE_INST,
-    //        AC780S_FUNC_SET
-    //};
-    //i2c_write_dt(
-    //        &config->bus,
-    //        cmdf,
-    //        sizeof(cmdf)
-    //);
-    //k_msleep(150);
     uint8_t command = AC780S_FUNCTION_SET;
     int err = auxdisplay_ac780s_send_command(
         dev,
-        (command |= (AC780S_FUNCTION_SET_DATA_LENGTH_BIT | AC780S_FUNCTION_SET_DISPLAY_LINES_BIT))
+        (command |= (AC780S_FUNCTION_SET_DATA_LENGTH_BIT | AC780S_FUNCTION_SET_DISPLAY_LINES_BIT | AC780S_FUNCTION_SET_FONT_TYPE_BIT))
     );
 
     if (err) {
         return err;
     }
 
-    //cmdf[1] = AC780S_DISP_ON;
     command = AC780S_DISPLAY_ON_OFF;
     err = auxdisplay_ac780s_send_command(
         dev,
@@ -579,20 +439,9 @@ static int auxdisplay_ac780s_init(const struct device *dev) {
     if (err) {
         return err;
     }
-    //i2c_write_dt(
-    //    &config->bus,
-    //    cmdf,
-    //    sizeof(cmdf)
-    //);
-    //k_msleep(150);
 
-    //cmdf[1] = AC780S_ENTRY_MODE;
-    //i2c_write_dt(
-    //    &config->bus,
-    //    cmdf,
-    //    sizeof(cmdf)
-    //);
-    //k_msleep(150);
+    data->power = true;
+
 
     command = AC780S_ENTRY_MODE_SET;
     err = auxdisplay_ac780s_send_command(
@@ -604,13 +453,6 @@ static int auxdisplay_ac780s_init(const struct device *dev) {
         return err;
     }
 
-    //cmdf[1] = AC780S_CLEAR_DISP;
-    //i2c_write_dt(
-    //    &config->bus,
-    //    cmdf,
-    //    sizeof(cmdf)
-    //);
-    //k_msleep(150);
 
     err = auxdisplay_ac780s_clear(dev);
 
@@ -659,41 +501,3 @@ static DEVICE_API(auxdisplay, auxdisplay_ac780s_auxdisplay_api) = {
 			      CONFIG_AUXDISPLAY_INIT_PRIORITY, &auxdisplay_ac780s_auxdisplay_api);
 
 DT_INST_FOREACH_STATUS_OKAY(AUXDISPLAY_AC780S_INST)
-
-
-/*
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⠀⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠈⣿⣿⣿⣿⣿⣿⠟⠉⠀⠀⠀⠙⢿⣿⣿⣿⣿⣿⣿⣿⡿⠋⠀⠀⠙⢻⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⠃⠀⠀⠀⠀⣠⣄⠀⢻⣿⣿⣿⣿⣿⡿⠀⣠⣄⠀⠀⠀⢻⣿⣿⣏⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⣾⣿⣿⣿⣿⠀⠀⠀⠀⠰⣿⣿⠀⢸⣿⣿⣿⣿⣿⡇⠀⣿⣿⡇⠀⠀⢸⣿⣿⣿⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠙⠃⠀⣼⣿⣿⣿⣿⣿⣇⠀⠙⠛⠁⠀⠀⣼⣿⣿⣿⡇⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣷⣤⣄⣀⣠⣤⣾⣿⣿⣿⣿⣽⣿⣿⣦⣄⣀⣀⣤⣾⣿⣿⣿⣿⠃⠀⠀⢀⣀⠀
-⠰⡶⠶⠶⠶⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠛⠉⠉⠙⠛⠋
-⠀⠀⢀⣀⣠⣤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠷⠶⠶⠶⢤⣤⣀
-⠀⠛⠋⠉⠁⠀⣀⣴⡿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣯⣤⣀⡀⠀⠀⠀⠀⠘
-⠀⠀⢀⣤⡶⠟⠉⠁⠀⠀⠉⠛⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠟⠉⠀⠀⠀⠉⠙⠳⠶⣄⡀⠀
-⠀⠀⠙⠁⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⢰⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-
-
-
-*/
