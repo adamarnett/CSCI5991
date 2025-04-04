@@ -118,12 +118,9 @@ static int auxdisplay_ac780s_send_command(const struct device *dev,
 
     // clear display and return home commands require a 10us wait
     // while all others require 100us
-    printk("marco\n");
     if (command < 0x04) {
-        printk("polo\n");
         k_usleep(10);
     } else {
-        printk("poooolooooo\n");
         k_usleep(100);
     }
 
