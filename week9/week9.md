@@ -13,8 +13,6 @@ zephyr/drivers/auxdisplay
 ```
 Implements functions like auxdisplay\_quadalpha\_write, defines certain commands for use in I2C, such as QUADALPHA\_BRIGHT\_MAX which sets the LEDs to their maximum brightness. Also uses DEVICE_API macro to declare the implemented API struct.
 
-### sparkfun,quadalpha.yaml
-yaml file to describe the display as a devicetree node. HEAVILY referenced sparkfun,serlcd.yaml as an example. Belongs in same directory as above file.
 
 ### Kconfig.quadalpha
 Kconfig file to describe AUXDISPLAY_QUADALPHA as a kconfig option. Belongs in same directory as above file.
@@ -32,6 +30,12 @@ Added:
 zephyr_library_sources_ifdef(CONFIG_AUXDISPLAY_SERLCD		auxdisplay_quadalpha.c)
 ```
 to ensure quadalpha driver included when building auxdisplay driver as a whole. Belongs in same directory as above file.
+
+### sparkfun,quadalpha.yaml
+yaml file to describe the display as a devicetree node. HEAVILY referenced sparkfun,serlcd.yaml as an example. Belongs in 
+```
+zephyr/dts/bindings/auxdisplay
+```
 
 ### boardPorting.md
 Notes on the guide on how to port new boards to Zephyr. Basically a distilled all you need and nothing you don't version.
