@@ -8,17 +8,17 @@
 #include <zephyr/drivers/auxdisplay.h>
 
 
-#define AC780S_FUNC_SET 0x38        // 0b 0011 1000
-#define AC780S_FUNC_SET_DELAY 100   // 100 microseconds
+//#define AC780S_FUNC_SET 0x38        // 0b 0011 1000
+//#define AC780S_FUNC_SET_DELAY 100   // 100 microseconds
 //#define AC780S_DISP_ON 0x0C         // 0b 0000 1100
-#define AC780S_DISP_ON_DELAY 100    // 100 microseconds
-#define AC780S_ENTRY_MODE 0x06      // 0b 0000 0111
-#define AC780S_ENTRY_MODE_DELAY 100 // 100 microseconds
-#define AC780S_RET_HOME 0x02        // 0b 0000 0010
-#define AC780S_CLEAR_DISP 0x01      // 0b 0000 0001
+//#define AC780S_DISP_ON_DELAY 100    // 100 microseconds
+//#define AC780S_ENTRY_MODE 0x06      // 0b 0000 0111
+//#define AC780S_ENTRY_MODE_DELAY 100 // 100 microseconds
+//#define AC780S_RET_HOME 0x02        // 0b 0000 0010
+//#define AC780S_CLEAR_DISP 0x01      // 0b 0000 0001
 
-#define AC780S_CTL_WRITE_INST 0x00  // 0b 1100 0000
-#define AC780S_CTL_WRITE_DISP 0x40  // 0b 1100 0000
+//#define AC780S_CTL_WRITE_INST 0x00  // 0b 1100 0000
+//#define AC780S_CTL_WRITE_DISP 0x40  // 0b 1100 0000
 
 #define AC780S_CUSTOM_CHAR_HEIGHT 8
 #define AC780S_CUSTOM_CHAR_WIDTH 5
@@ -66,6 +66,16 @@
  */
 #define AC780S_ENTRY_MODE_SET_SHIFT_DISPLAY_BIT BIT(0)
 
+/*
+ * bit to set in the cursor display shift command to indicate shifting of entire display
+ */
+#define AC780S_CURSOR_DISPLAY_SHIFT_DISPLAY_BIT BIT(3)
+
+/*
+ * bit to set in the cursor display shift command to indicate shifting to the right
+ */
+#define AC780S_CURSOR_DISPLAY_SHIFT_RIGHT_BIT BIT(2)
+
 enum font_type {
     FONT_5X8_DOTS,
     FONT_5X11_DOTS
@@ -81,15 +91,6 @@ enum auxdisplay_ac780s_command {
     AC780S_CGRAM_ADDRESS_SET = 0x40,
     AC780S_DDGRAM_ADDRESS_SET = 0x80
 };
-
-//enum auxdisplay_ac780s_special_command {
-//    AC780S_ENTRY_MODE_SET = 0x04,
-//    AC780S_DISPLAY_ON_OFF = 0x08,
-//    AC780S_CURSOR_DISPLAY_SHIFT = 0x10,
-//    AC780S_FUNCTION_SET = 0x20,
-//    AC780S_CGRAM_ADDRESS_SET = 0x40,
-//    AC780S_DDGRAM_ADDRESS_SET = 0x80
-//};
 
 // TODO figure out what in here can only be changed on init
 // if can't be changed after display is on, move to 
@@ -129,25 +130,22 @@ static int auxdisplay_ac780s_send_command(const struct device *dev,
 
     // clear display and return home commands require a 10us wait
     // while all others require 100us
+    printk("marco\n");
     if (command < 0x04) {
+        printk("polo\n");
         k_usleep(10);
     } else {
+        printk("poooolooooo\n");
         k_usleep(100);
     }
 
     return err;
 }
 
-//static int
-//auxdisplay_ac780s_send_special_command(const struct device *dev,
-//				       const enum auxdisplay_ac780s_special_command command) {
-//
-//}
-
-
 static int auxdisplay_ac780s_send_display_state(const struct device *dev,
     const struct auxdisplay_ac780s_data *data) {
-
+    
+    return 0;
 }
 
 static int auxdisplay_ac780s_display_on(const struct device *dev) {
@@ -271,6 +269,7 @@ static int auxdisplay_ac780s_cursor_position_set(const struct device *dev,
         // to correctly place the cursor
         const struct auxdisplay_ac780s_config *config = dev->config;
         const struct auxdisplay_capabilities capabilities = config->capabilities;
+        struct auxdisplay_ac780s_data *data = dev->data;
 	    const uint16_t cols = capabilities.columns;
 	    const uint16_t rows = capabilities.rows;
 
@@ -279,7 +278,7 @@ static int auxdisplay_ac780s_cursor_position_set(const struct device *dev,
         // they are also mapped "every other" so the number of characters to 
         // advance can't be calculated with something like (rows*20)+cols, so
         // instead we have a little lookup table
-        uint8_t rowStartAddr[4] = {0x00, 0x28, 0x14, 0x42};
+        uint8_t rowStartAddr[4] = {0x00, 0x28, 0x0E, 0x36};
 
         // for error checking
         int err = 0;
@@ -287,6 +286,7 @@ static int auxdisplay_ac780s_cursor_position_set(const struct device *dev,
         // if moving from 0,0
         if (type == AUXDISPLAY_POSITION_ABSOLUTE) {
 
+            printk("x [%d], y [%d], cols [%d], rows [%d]\n", x, y, cols, rows);
             // check if x & y are within display bounds
             if (
                 (x < 0 || x >= cols) ||
@@ -295,24 +295,47 @@ static int auxdisplay_ac780s_cursor_position_set(const struct device *dev,
                 // return invalid arg error if they are not
                 return -EINVAL;
             }
-            
+
             // offset in display controller RAM
             uint8_t dest = rowStartAddr[y] + x;
+            printk("dest [%d]\n", dest);
 
             // use logical or to add destination address to address
             // set command
-            uint8_t command = (AC780S_DDGRAM_ADDRESS_SET | dest);
+            uint8_t command = AC780S_DDGRAM_ADDRESS_SET;
+            command |= dest;
+            printk("command [%d]\n", command);
 
             err = auxdisplay_ac780s_send_command(
                 dev,
                 command
             );
 
+            if (err) {
+                return err;
+            }
+
+            // can't shift multiple at once, have to send multiple shift commands
+            for (int i =0; i < x; i++) {
+                printk("iter [%d]\n", i);
+
+                err = auxdisplay_ac780s_send_command(
+                    dev,
+                    (AC780S_CURSOR_DISPLAY_SHIFT | AC780S_CURSOR_DISPLAY_SHIFT_RIGHT_BIT)
+                );
+
+                if (err) {
+                    return err;
+                }
+            }
+
         }
 
-        //if (!err) {
-        //    // TODO --> update x & y position in data?
-        //}
+        if (!err) {
+            data->cursor_x = x;
+            data->cursor_y = y;
+        }
+    
 
         return err;
 
@@ -322,7 +345,6 @@ static int auxdisplay_ac780s_cursor_position_get(const struct device *dev, int16
     
     const struct auxdisplay_ac780s_data *data = dev->data;
 
-    // TODO --> does dev->data->cursor_x work?
     *x = data->cursor_x;
     *y = data->cursor_y;
 
@@ -361,15 +383,31 @@ static int auxdisplay_ac780s_clear(const struct device *dev) {
 static int auxdisplay_ac780s_custom_character_set(const struct device *dev,
     struct auxdisplay_character *character) {
 
+    return 0;
 }
 
 static void auxdisplay_ac780s_advance_current_position(const struct device *dev) {
+
+    const struct auxdisplay_ac780s_config *config = dev->config;
+    struct auxdisplay_ac780s_data *data = dev->data;
+    const struct auxdisplay_capabilities capabilities = config->capabilities;
+	const uint16_t cols = capabilities.columns;
+	const uint16_t rows = capabilities.rows;
+
+    // TODO check shift direction? might be a setting that goes left not right
+    if ((data->cursor_x++) >= cols) {
+        data->cursor_x = 0;
+        if ((data->cursor_y++) >= rows) {
+            data->cursor_y = 0;
+        }
+    }
 
 }
 
 static int auxdisplay_ac780s_write(const struct device *dev, const uint8_t *text, uint16_t len) {
 
     const struct auxdisplay_ac780s_config *config = dev->config;
+    struct auxdisplay_ac780s_data *data = dev->data;
 
     //AC780S_CTL_WRITE_DISP or something = 0x40
     uint8_t buf[2] = {0x40, 0x00};
@@ -395,7 +433,11 @@ static int auxdisplay_ac780s_write(const struct device *dev, const uint8_t *text
            return err;
         }
 
-        // TODO --> increment cursor x and/or y?
+        auxdisplay_ac780s_advance_current_position(dev);
+
+        //printk("\ncusror_x = [%d]\n", data->cursor_x);
+        //printk("cusror_y = [%d]\n", data->cursor_y);
+
 
         // wait for write data to RAM command to execute
         k_usleep(100);

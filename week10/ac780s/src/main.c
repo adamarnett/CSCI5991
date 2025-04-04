@@ -20,13 +20,36 @@ int main(void)
 
         k_msleep(500);
 
-        uint8_t chars[] = {0x41,0x51};
+        // this is the closest I can get to ¯\_(ツ)_/¯, since there's
+        // no preprogrammed backslash in the AC780S
+        uint8_t chars[] = {
+            0xCD,
+            0x5F,
+            0x28,
+            0xBC,
+            0x29,
+            0x5F,
+            0x2F,
+            0x2D
+        };
 
+        int err = auxdisplay_cursor_position_set(i2c0_dev,AUXDISPLAY_POSITION_ABSOLUTE, 0, 1);
         auxdisplay_write(i2c0_dev, chars, sizeof(chars));
 
-        while (1) {
-                k_msleep(999999);
-        }
+
+        printk("err [%d]\n", err);
+
+
+        //while (1) {
+        //    
+        //    auxdisplay_write(i2c0_dev, &achar, sizeof(uint8_t));
+        //    
+        //    if ((achar++) > 176) {
+        //        achar = 0;
+        //    }
+        //    
+        //    k_msleep(500);
+        //}
 
         return 0;
 }
