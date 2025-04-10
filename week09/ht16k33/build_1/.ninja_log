@@ -1,0 +1,11 @@
+# ninja log v5
+1	24	1743127086776921496	_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-mkdir	a1153876bfd4656a
+1	24	1743127086776921496	/home/adam/zephyrProjects/ht16k33/build_1/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-mkdir	a1153876bfd4656a
+24	31	1743127086783921386	_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-download	b9bfe62748682953
+24	31	1743127086783921386	/home/adam/zephyrProjects/ht16k33/build_1/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-download	b9bfe62748682953
+31	39	1743127086790921276	_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-update	f0ea67eb20126b14
+31	39	1743127086790921276	/home/adam/zephyrProjects/ht16k33/build_1/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-update	f0ea67eb20126b14
+39	46	1743127086798921150	_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-patch	6f2f8f55fa2fe7ec
+39	46	1743127086798921150	/home/adam/zephyrProjects/ht16k33/build_1/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-patch	6f2f8f55fa2fe7ec
+46	53	1743127086804921055	_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-configure	49424c4b8fa6cefa
+46	53	1743127086804921055	/home/adam/zephyrProjects/ht16k33/build_1/_sysbuild/sysbuild/images/ht16k33-prefix/src/ht16k33-stamp/ht16k33-configure	49424c4b8fa6cefa

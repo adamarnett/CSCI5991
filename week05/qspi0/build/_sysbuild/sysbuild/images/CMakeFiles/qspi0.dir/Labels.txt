@@ -1,0 +1,13 @@
+# Target labels
+ qspi0
+# Source files and their labels
+/home/adam/zephyrProjects/qspi0/build/_sysbuild/sysbuild/images/CMakeFiles/qspi0
+/home/adam/zephyrProjects/qspi0/build/_sysbuild/sysbuild/images/CMakeFiles/qspi0.rule
+/home/adam/zephyrProjects/qspi0/build/_sysbuild/sysbuild/images/CMakeFiles/qspi0-complete.rule
+/home/adam/zephyrProjects/qspi0/build/_sysbuild/sysbuild/images/qspi0-prefix/src/qspi0-stamp/qspi0-build.rule
+/home/adam/zephyrProjects/qspi0/build/_sysbuild/sysbuild/images/qspi0-prefix/src/qspi0-stamp/qspi0-configure.rule
+/home/adam/zephyrProjects/qspi0/build/_sysbuild/sysbuild/images/qspi0-prefix/src/qspi0-stamp/qspi0-download.rule
+/home/adam/zephyrProjects/qspi0/build/_sysbuild/sysbuild/images/qspi0-prefix/src/qspi0-stamp/qspi0-install.rule
+/home/adam/zephyrProjects/qspi0/build/_sysbuild/sysbuild/images/qspi0-prefix/src/qspi0-stamp/qspi0-mkdir.rule
+/home/adam/zephyrProjects/qspi0/build/_sysbuild/sysbuild/images/qspi0-prefix/src/qspi0-stamp/qspi0-patch.rule
+/home/adam/zephyrProjects/qspi0/build/_sysbuild/sysbuild/images/qspi0-prefix/src/qspi0-stamp/qspi0-update.rule

@@ -1,0 +1,6 @@
+west:
+  command: /home/adam/ncs/toolchains/b77d8c1312/usr/local/bin/west build --build-dir
+    /home/adam/zephyrProjects/ht16k33/build_1 /home/adam/zephyrProjects/ht16k33 --pristine
+    --board nrf52840dk/nrf52840 -- -DNCS_TOOLCHAIN_VERSION=NONE
+  topdir: /home/adam/ncsII/ncs/main
+  version: 1.2.0

@@ -1,0 +1,7 @@
+default: qspi0
+build_dir: /home/adam/zephyrProjects/qspi0/build
+domains:
+  - name: qspi0
+    build_dir: /home/adam/zephyrProjects/qspi0/build/qspi0
+flash_order:
+  - qspi0

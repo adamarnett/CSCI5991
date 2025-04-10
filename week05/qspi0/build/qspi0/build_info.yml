@@ -1,0 +1,50 @@
+cmake:
+  application:
+    configuration-dir: /home/adam/zephyrProjects/qspi0
+    source-dir: /home/adam/zephyrProjects/qspi0
+  board:
+    name: nrf52840dk
+    qualifiers: nrf52840
+    revision: 
+  devicetree:
+    bindings-dirs:
+     - /home/adam/ncs/v2.9.0/nrf/dts/bindings
+     - /home/adam/ncs/v2.9.0/zephyr/dts/bindings
+    files:
+     - /home/adam/ncs/v2.9.0/zephyr/boards/nordic/nrf52840dk/nrf52840dk_nrf52840.dts
+     - nrf52840dk_nrf52840.overlay
+    include-dirs:
+     - /home/adam/ncs/v2.9.0/nrf/include
+     - /home/adam/ncs/v2.9.0/nrf/dts
+     - /home/adam/ncs/v2.9.0/zephyr/include
+     - /home/adam/ncs/v2.9.0/zephyr/include/zephyr
+     - /home/adam/ncs/v2.9.0/zephyr/dts/common
+     - /home/adam/ncs/v2.9.0/zephyr/dts/x86
+     - /home/adam/ncs/v2.9.0/zephyr/dts/xtensa
+     - /home/adam/ncs/v2.9.0/zephyr/dts/sparc
+     - /home/adam/ncs/v2.9.0/zephyr/dts/riscv
+     - /home/adam/ncs/v2.9.0/zephyr/dts/posix
+     - /home/adam/ncs/v2.9.0/zephyr/dts/nios2
+     - /home/adam/ncs/v2.9.0/zephyr/dts/arm64
+     - /home/adam/ncs/v2.9.0/zephyr/dts/arm
+     - /home/adam/ncs/v2.9.0/zephyr/dts/arc
+     - /home/adam/ncs/v2.9.0/zephyr/dts
+    user-files:
+     - nrf52840dk_nrf52840.overlay
+  kconfig:
+    files:
+     - /home/adam/ncs/v2.9.0/zephyr/boards/nordic/nrf52840dk/nrf52840dk_nrf52840_defconfig
+     - /home/adam/zephyrProjects/qspi0/prj.conf
+     - /home/adam/zephyrProjects/qspi0/build/qspi0/zephyr/.config.sysbuild
+    user-files:
+     - /home/adam/zephyrProjects/qspi0/prj.conf
+  toolchain:
+    name: zephyr
+    path: /home/adam/ncs/toolchains/b77d8c1312/opt/zephyr-sdk
+  vendor-specific:
+    nordic:
+      svdfile: /home/adam/ncs/v2.9.0/modules/hal/nordic/nrfx/mdk/nrf52840.svd
+  zephyr:
+    version: 3.7.99
+    zephyr-base: /home/adam/ncs/v2.9.0/zephyr
+version: 0.1.0
