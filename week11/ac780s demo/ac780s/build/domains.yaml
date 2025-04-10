@@ -1,0 +1,7 @@
+default: ac780s
+build_dir: /home/adam/zephyrProjects/ac780s/build
+domains:
+  - name: ac780s
+    build_dir: /home/adam/zephyrProjects/ac780s/build/ac780s
+flash_order:
+  - ac780s

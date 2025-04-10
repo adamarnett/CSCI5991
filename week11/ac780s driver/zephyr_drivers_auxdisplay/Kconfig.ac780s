@@ -1,0 +1,10 @@
+# Copyright (c) 2025 Adam Arnett <adamarnett@proton.me>
+# SPDX-License-Identifier: Apache-2.0
+
+config AUXDISPLAY_AC780S
+	bool "Orient Display AC780S dot character LCD driver"
+	default y
+	select I2C
+	depends on DT_HAS_AC780S_ENABLED
+	help
+	  Enable driver for Orient Display AC780S LCD controller.

@@ -1,0 +1,38 @@
+
+description: |
+  Orient Dispay AC780S 16COM/40SEG Driver and Controller
+
+  Example:
+    &i2c0 {
+      status = "okay";
+
+        ac780s@3C {
+        status = "okay";
+        compatible = "ac780s";
+        reg = <0x3C>;
+        columns = <8>;
+        rows = <2>;
+        command-delay-ms = <10>;
+    		special-command-delay-ms = <50>;
+      };
+    };
+
+compatible: "ac780s"
+
+include: [auxdisplay-device.yaml, i2c-device.yaml]
+
+properties:
+  columns:
+    type: int
+    default: 16
+    enum:
+      - 8
+      - 16
+      - 20
+
+  rows:
+    type: int
+    default: 2
+    enum:
+      - 2
+      - 4
