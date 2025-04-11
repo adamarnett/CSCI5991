@@ -5,7 +5,6 @@
 // get the i2c0 device from dt
 const static struct device *i2c0_dev = DEVICE_DT_GET(DT_CHILD(DT_NODELABEL(i2c0), ac780s_3c));
 
-
 int print_addr(
     const struct device* dev,
     uint8_t addr
@@ -23,7 +22,7 @@ int print_addr(
     uint8_t firstBuf[8];
     snprintk(firstBuf, sizeof(uint8_t)*8, "W0x%04x  ", addr);
     firstBuf[7] = 0x10;
-    printk("W:0x%04x\n", addr);
+    //printk("W:0x%04x\n", addr);
     auxdisplay_write(i2c0_dev, firstBuf, 8*sizeof(uint8_t));
     // write addr to display on second
     uint8_t secondBuf[1] = {addr};
@@ -39,35 +38,15 @@ int main(void)
 {
 
         if (!device_is_ready(i2c0_dev)) {
-                printk("I2C_0 device not ready :(\n");
-                return 0;
+            printk("I2C_0 device not ready :(\n");
+            return 0;
         } else {
-                printk("I2C_0 device is ready!\n");
-        }
+            printk("I2C_0 device is ready!\n");
+    }
 
         k_msleep(500);
 
-        // this is the closest I can get to ¯\_(ツ)_/¯, since there's
-        // no preprogrammed backslash in the AC780S...
-        uint8_t chars[] = {
-            0xCD,
-            0x5F,
-            0x28,
-            0xBC,
-            0x29,
-            0x5F,
-            0x2F,
-            0x2D
-        };
-
-        auxdisplay_cursor_set_enabled(i2c0_dev, true);
-
-        k_msleep(5001);
-
         // set custom chars
-        uint8_t emptyArr[40];
-        memset(emptyArr, 0, sizeof(emptyArr));
-
         uint8_t sadArr[] = {
             0 ,255, 0 ,255, 0 ,
            255, 0 , 0 , 0 ,255,
@@ -129,24 +108,8 @@ int main(void)
             .index = 3,
             .data = sadArr
         };
-        struct auxdisplay_character empty = {
-            .character_code = 99,
-            .index = 0,
-            .data = emptyArr
-        };
 
         int err = 0;
-
-        for (int i = 0; i < 8; i++) {
-            err = auxdisplay_custom_character_set(
-                i2c0_dev,
-                &empty
-            );
-            if (err) {
-                printk("ERR [%d]\n", err);
-            }
-            empty.index++;
-        }
 
         err = auxdisplay_custom_character_set(
             i2c0_dev,
@@ -185,6 +148,27 @@ int main(void)
         printk("char code of angy: [%d]\n", angy.character_code);
         printk("char code of sad: [%d]\n", sad.character_code);
 
+        // this is the closest I can get to ¯\_(ツ)_/¯, since there's
+        // no preprogrammed backslash in the AC780S...
+        uint8_t chars[] = {
+            0x2D,
+            0x00,
+            0x5F,
+            0x28,
+            0xBC,
+            0x29,
+            0x5F,
+            0x2F//,
+            //0x2D
+        };
+
+        err = auxdisplay_write(i2c0_dev, chars, sizeof(chars));
+        if (err) {
+            printk("ERR [%d]\n", err);
+        }
+
+        k_msleep(9001);
+
         uint8_t x = 0;
         while (1) {
 
@@ -193,9 +177,6 @@ int main(void)
 
             x++;
         }
-
-
-
 
 
         return 0;

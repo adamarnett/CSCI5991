@@ -296,7 +296,7 @@ static int auxdisplay_ac780s_capabilities_get(const struct device *dev,
 
     const struct auxdisplay_ac780s_config *config = dev->config;
     
-    void* err = memcpy(capabilities, &config->capabilities, sizeof(capabilities));
+    void* err = memcpy(capabilities, &config->capabilities, sizeof(*capabilities));
 
     if (err != capabilities) {
         return -EINVAL;
@@ -318,9 +318,6 @@ static int auxdisplay_ac780s_clear(const struct device *dev) {
 
 static int auxdisplay_ac780s_custom_character_set(const struct device *dev,
     struct auxdisplay_character *character) {
-
-    // character --> uint8_t* data = width by height array, 0xFF for high, 0x00 for low
-    // character --> uint8_t character_code = code for custom character
 
     const struct auxdisplay_ac780s_config *config = dev->config;
     const uint8_t *character_data = character->data;
@@ -361,7 +358,7 @@ static int auxdisplay_ac780s_custom_character_set(const struct device *dev,
     );
 
     // sleep to allow processing of write to RAM
-    k_msleep(100);
+    k_msleep(60);
 
     if (!err) {
         character->character_code = character_index;
@@ -378,8 +375,6 @@ static void auxdisplay_ac780s_advance_current_position(const struct device *dev)
 	const uint16_t cols = capabilities.columns;
 	const uint16_t rows = capabilities.rows;
 
-    // TODO check shift direction? might be a setting that goes left not right
-    // with how it's initialized it is perfect for now
     if ((data->cursor_x++) >= cols) {
         data->cursor_x = 0;
         if ((data->cursor_y++) >= rows) {
@@ -401,6 +396,24 @@ static int auxdisplay_ac780s_write(const struct device *dev, const uint8_t *text
     int err = 0;
     int16_t x = 0 , y = 0;
 
+    err = auxdisplay_ac780s_cursor_position_get(dev, &x, &y);
+    if (err) {
+        return err;
+    }
+
+    // if last command was to write to CGRAM, address counter in the 
+    // ac780s will still be pointed there. Setting position here ensures
+    // we're writing to the right place
+    err = auxdisplay_ac780s_cursor_position_set(
+        dev, 
+        AUXDISPLAY_POSITION_ABSOLUTE,
+        x,
+        y
+    );
+    if (err) {
+        return err;
+    }
+
     // unfortunately have to write one uint8_t at a time, since a control byte must
     // precede the data to indicate it should be written to RAM.
     // technically the control byte only needs to be sent once, but I don't see a 
@@ -409,35 +422,38 @@ static int auxdisplay_ac780s_write(const struct device *dev, const uint8_t *text
         // get next uint8_t
         buf[1] = text[i];
 
+        printk("%X\n", buf[1]);
+
         // send transmission
         err = i2c_write_dt(
             &config->bus,
             buf,
             sizeof(buf)
         );
-
         if (err) {
            return err;
         }
+        // wait for write data to RAM command to execute
+        k_usleep(50);
 
         auxdisplay_ac780s_advance_current_position(dev);
         err = auxdisplay_ac780s_cursor_position_get(dev, &x, &y);
-
         if (err) {
             return err;
         }
 
         if (x >= (capabilities.columns)) {
-            auxdisplay_ac780s_cursor_position_set(
+            err = auxdisplay_ac780s_cursor_position_set(
                 dev, 
                 AUXDISPLAY_POSITION_ABSOLUTE,
                 0,
                 ((y+1)%capabilities.rows)
             );
+            if (err) {
+                return err;
+            }
         }
 
-        // wait for write data to RAM command to execute
-        k_usleep(100);
     }
 
     return err;
@@ -449,12 +465,8 @@ static int auxdisplay_ac780s_init(const struct device *dev) {
     const struct auxdisplay_ac780s_config *config = dev->config;
     struct auxdisplay_ac780s_data *data = dev->data;
 
-    // TODO pull probably everything out of here lol
-    // or maybe not? perhaps the initialization procedure in the datasheet
-    // needs to be adhered to 100% of the time and is not an example?
-    // the commands should be replaced with calls to send_command, as was done
-    // with the function set command. That one can probably stay within this
-    // function, but the others might be able to be taken out. Not sure yet
+    data->cursor_x = 0;
+    data->cursor_y = 0;
 
 	if (!device_is_ready(config->bus.bus)) {
 		return -ENODEV;
@@ -465,34 +477,23 @@ static int auxdisplay_ac780s_init(const struct device *dev) {
         dev,
         (command |= (AC780S_FUNCTION_SET_DATA_LENGTH_BIT | AC780S_FUNCTION_SET_DISPLAY_LINES_BIT))
     );
-
     if (err) {
         return err;
     }
 
-    command = AC780S_DISPLAY_ON_OFF;
-    err = auxdisplay_ac780s_send_command(
-        dev,
-        (command |= (AC780S_DISPLAY_ON_OFF_POWER_BIT))
-    );
-
+    err = auxdisplay_ac780s_display_on(dev);
     if (err) {
         return err;
     }
-
-    data->power = true;
-
 
     command = AC780S_ENTRY_MODE_SET;
     err = auxdisplay_ac780s_send_command(
         dev,
         (command |= (AC780S_ENTRY_MODE_SET_INCREMENT_BIT))
     );
-
     if (err) {
         return err;
     }
-
 
     err = auxdisplay_ac780s_clear(dev);
 
