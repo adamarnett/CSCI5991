@@ -7,7 +7,8 @@
 
 #include <zephyr/drivers/sensor/sht4x.h>
 
-const static struct device *i2c0_disp = DEVICE_DT_GET(DT_CHILD(DT_NODELABEL(i2c0), ac780s_3c));
+//const static struct device *i2c0_disp = DEVICE_DT_GET(DT_CHILD(DT_NODELABEL(i2c0), ac780s_3c));
+const static struct device *i2c0_disp = DEVICE_DT_GET(DT_CHILD(DT_NODELABEL(i2c0), serlcd_72));
 const static struct device *i2c1_therm = DEVICE_DT_GET(DT_CHILD(DT_NODELABEL(i2c1), sht4x_44));
 
 int main(void) {

@@ -154,12 +154,13 @@
 			pinctrl-0 = < &i2c0_default >;
 			pinctrl-1 = < &i2c0_sleep >;
 			pinctrl-names = "default", "sleep";
-			ac780s@3c {
-				status = "okay";
-				compatible = "ac780s";
-				reg = < 0x3c >;
-				columns = < 0x8 >;
+			serlcd@72 {
+				compatible = "sparkfun,serlcd";
+				reg = < 0x72 >;
+				columns = < 0x10 >;
 				rows = < 0x2 >;
+				command-delay-ms = < 0xa >;
+				special-command-delay-ms = < 0x32 >;
 			};
 		};
 		spi0: spi@40003000 {
