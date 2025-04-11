@@ -62,31 +62,128 @@ int main(void)
 
         auxdisplay_cursor_set_enabled(i2c0_dev, true);
 
-        k_msleep(9001);
+        k_msleep(5001);
 
-        // set custom char
-        uint8_t dataa[] = {
+        // set custom chars
+        uint8_t emptyArr[40];
+        memset(emptyArr, 0, sizeof(emptyArr));
+
+        uint8_t sadArr[] = {
+            0 ,255, 0 ,255, 0 ,
+           255, 0 , 0 , 0 ,255,
+            0 , 0 , 0 , 0 , 0 ,
+            0 ,255, 0 ,255, 0 ,
+            0 , 0 , 0 , 0 , 0 ,
+            0 ,255,255,255, 0 ,
+           255, 0 , 0 , 0 ,255,
+            0 , 0 , 0 , 0 , 0 
+        };
+        uint8_t backslashArr[] = {
+            0 , 0 , 0 , 0 , 0 ,
+            0 , 0 , 0 , 0 ,255,
+            0 , 0 , 0 ,255, 0 ,
+            0 , 0 ,255, 0 , 0 ,
+            0 ,255, 0 , 0 , 0 ,
+           255, 0 , 0 , 0 , 0 ,
+            0 , 0 , 0 , 0 , 0 ,
+            0 , 0 , 0 , 0 , 0 
+        };
+        uint8_t angyArr[] = {
+           255, 0 , 0 , 0 ,255,
+            0 ,255, 0 ,255, 0 ,
+            0 , 0 , 0 , 0 , 0 ,
+            0 ,255, 0 ,255, 0 ,
+            0 , 0 , 0 , 0 , 0 ,
+            0 ,255,255,255, 0 ,
+           255, 0 , 0 , 0 ,255,
+            0 , 0 , 0 , 0 , 0 
+        };
+        uint8_t happyArr[] = {
             0 , 0 , 0 , 0 , 0 ,
             0 ,255, 0 ,255, 0 ,
             0 ,255, 0 ,255, 0 ,
             0 , 0 , 0 , 0 , 0 ,
            255, 0 , 0 , 0 ,255,
-            0 ,255, 0 ,255, 0 ,
-            0 , 0 ,255, 0 , 0 ,
+            0 ,255,255,255, 0 ,
+            0 , 0 , 0 , 0 , 0 ,
             0 , 0 , 0 , 0 , 0 
         };
 
-        struct auxdisplay_character newChar = {
-            .character_code = 0b10010001,
-            .index = 0b10010001,
-            .data = dataa
+        struct auxdisplay_character backslash = {
+            .character_code = 99,
+            .index = 0,
+            .data = backslashArr
         };
-        struct auxdisplay_character* pointy = &newChar;
+        struct auxdisplay_character happy = {
+            .character_code = 99,
+            .index = 1,
+            .data = happyArr
+        };
+        struct auxdisplay_character angy = {
+            .character_code = 99,
+            .index = 2,
+            .data = angyArr
+        };
+        struct auxdisplay_character sad = {
+            .character_code = 99,
+            .index = 3,
+            .data = sadArr
+        };
+        struct auxdisplay_character empty = {
+            .character_code = 99,
+            .index = 0,
+            .data = emptyArr
+        };
 
-        int err = auxdisplay_custom_character_set(
+        int err = 0;
+
+        for (int i = 0; i < 8; i++) {
+            err = auxdisplay_custom_character_set(
+                i2c0_dev,
+                &empty
+            );
+            if (err) {
+                printk("ERR [%d]\n", err);
+            }
+            empty.index++;
+        }
+
+        err = auxdisplay_custom_character_set(
             i2c0_dev,
-            pointy
+            &backslash
         );
+        if (err) {
+            printk("ERR [%d]\n", err);
+        }
+
+        err = auxdisplay_custom_character_set(
+            i2c0_dev,
+            &happy
+        );
+        if (err) {
+            printk("ERR [%d]\n", err);
+        }
+
+        err = auxdisplay_custom_character_set(
+            i2c0_dev,
+            &angy
+        );
+        if (err) {
+            printk("ERR [%d]\n", err);
+        }
+
+        err = auxdisplay_custom_character_set(
+            i2c0_dev,
+            &sad
+        );
+        if (err) {
+            printk("ERR [%d]\n", err);
+        }
+
+        printk("char code of backslash: [%d]\n", backslash.character_code);
+        printk("char code of happy: [%d]\n", happy.character_code);
+        printk("char code of angy: [%d]\n", angy.character_code);
+        printk("char code of sad: [%d]\n", sad.character_code);
 
         uint8_t x = 0;
         while (1) {

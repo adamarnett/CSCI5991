@@ -7,10 +7,9 @@
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/drivers/auxdisplay.h>
 
-// TODO this will depend on devicetree...
 #define AC780S_CUSTOM_CHAR_HEIGHT 8
 #define AC780S_CUSTOM_CHAR_WIDTH 5
-#define AC780S_CUSTOM_CHAR_MAX_COUNT 0
+#define AC780S_CUSTOM_CHAR_MAX_COUNT 8
 
 /*
  * bit to set in the display on/off command to indicate the display should be powered on
@@ -23,8 +22,7 @@
 #define AC780S_DISPLAY_ON_OFF_CURSOR_BIT BIT(1)
 
 /*
- * bit to set in the display on/off command to indicate the display should be blinking
- * TODO (above) display blinking or cursor blinking?
+ * bit to set in the display on/off command to indicate the cursor position should be blinking
  */
 #define AC780S_DISPLAY_ON_OFF_BLINKING_BIT BIT(0)
 
@@ -66,7 +64,7 @@
 
 enum font_type {
     FONT_5X8_DOTS,
-    FONT_5X11_DOTS
+    FONT_5X10_DOTS
 };
 
 enum auxdisplay_ac780s_command {
@@ -84,12 +82,12 @@ enum auxdisplay_ac780s_command {
 // if can't be changed after display is on, move to 
 // devicetree to set in init function
 struct auxdisplay_ac780s_data {
-	bool power;         // disp on/off
-	bool cursor;        // disp on/off
-	bool blinking;      // disp on/off
-    bool increment;     // entry mode
-    enum font_type font;// func set
-    uint8_t lines;      // func set
+	bool power;         
+	bool cursor;        
+	bool blinking;      
+    bool increment;     
+    enum font_type font;
+    uint8_t lines;      
 	uint16_t cursor_x;
 	uint16_t cursor_y;
 };
@@ -106,8 +104,8 @@ static int auxdisplay_ac780s_send_command(const struct device *dev,
 
     const struct auxdisplay_ac780s_config *config = dev->config;
 
-    // AC780S_CTL_WRITE_INST = 0x00
-    // TODO clarify this
+    // all commands must be preceded by a control byte (0x00) that
+    // indicates a command will follow 
     uint8_t buf[2] = {0x00, command};
 
     int err = i2c_write_dt(
@@ -232,8 +230,6 @@ static int auxdisplay_ac780s_cursor_position_set(const struct device *dev,
         // TODO finish the rest of the options
         // if moving from 0,0
         if (type == AUXDISPLAY_POSITION_ABSOLUTE) {
-
-            printk("x [%d], y [%d], cols [%d], rows [%d]\n", x, y, cols, rows);
             // check if x & y are within display bounds
             if (
                 (x < 0 || x >= cols) ||
@@ -245,13 +241,11 @@ static int auxdisplay_ac780s_cursor_position_set(const struct device *dev,
 
             // offset in display controller RAM
             uint8_t dest = rowStartAddr[y] + x;
-            printk("dest [%d]\n", dest);
 
             // use logical or to add destination address to address
             // set command
             uint8_t command = AC780S_DDGRAM_ADDRESS_SET;
             command |= dest;
-            printk("command [%d]\n", command);
 
             err = auxdisplay_ac780s_send_command(
                 dev,
@@ -325,83 +319,53 @@ static int auxdisplay_ac780s_clear(const struct device *dev) {
 static int auxdisplay_ac780s_custom_character_set(const struct device *dev,
     struct auxdisplay_character *character) {
 
-        // TODO --> ...this whole function. Should be done after font type is
-        // added to the devicetree stuff, since this will depend heavily on it
-
     // character --> uint8_t* data = width by height array, 0xFF for high, 0x00 for low
     // character --> uint8_t character_code = code for custom character
 
-
     const struct auxdisplay_ac780s_config *config = dev->config;
-    
-    printk("attempting write to [0x%x]\n", character->character_code);
+    const uint8_t *character_data = character->data;
+    uint8_t character_index = character->index;
 
-    uint8_t new_char[9] = {0x40,0,0,0,0,0,0,0,0};
-    
-    printk("|-----|\n");
-    for (int i = 0; i < 40; i++) {
-        if (i%5 == 0) {
-            printk("|");
-        }
-        
-        if (character->data[i] == 0xFF) {
-
-            new_char[(i/5)+1] |= ( 0x01 << (i%5));
-            printk("█");
-
-        } else if (character->data[i] == 0x00) {
-
-            printk(" ");
-
-        } else {
-
-            printk("?");
-
-        }
-
-        if (i%5 == 4) {
-            printk("|\n");
-        }
-        
+    if (character_index >= AC780S_CUSTOM_CHAR_MAX_COUNT) {
+        return -EINVAL;
     }
-    printk("|-----|\n");
 
-    
-    printk("|--------|\n");
-    for (int i = 0; i < 8; i++) {
-        printk("|");
-        for (int j = 0; j < 8; j++) {
-
-            if ( (new_char[i+1] & ( 0x01 << j )) > 0) {
-                printk("1");
-            } else {
-
-                printk("0");
-            }
-
+    // buffer for data to send to ac780s
+    uint8_t new_char[AC780S_CUSTOM_CHAR_HEIGHT+1];
+    memset(new_char,0,(AC780S_CUSTOM_CHAR_HEIGHT+1)*sizeof(uint8_t));
+    // precede data with control byte to indicate that data will follow
+    new_char[0] = 0x40;
+    // put data from auxdisplay_character struct into buffer
+    for (int i = 0; i < (AC780S_CUSTOM_CHAR_HEIGHT*AC780S_CUSTOM_CHAR_WIDTH); i++) {
+        if (character_data[i] == 0xFF) {
+            new_char[(i/5)+1] |= BIT(i%5);
+        } else if (character_data[i] != 0x00) {
+            return -EINVAL;
         }
-        printk("| = %d\n", new_char[i+1]);
     }
-    printk("|--------|\n");
-
 
     // set CGRAM address
     int err = auxdisplay_ac780s_send_command(
         dev,
-        AC780S_CGRAM_ADDRESS_SET | 0x01
+        AC780S_CGRAM_ADDRESS_SET | (character_index * 0x08)
     );
     if (err) {
         return err;
     }
-    printk("Sent CGRAM addr cmd\n");
+
     // write data for new char to CGRAM
     err = i2c_write_dt(
         &config->bus,
         new_char,
         sizeof(new_char)
     );
-    printk("Sent data\n");
 
+    // sleep to allow processing of write to RAM
+    k_msleep(100);
+
+    if (!err) {
+        character->character_code = character_index;
+    }
     
     return err;
 }
@@ -430,10 +394,12 @@ static int auxdisplay_ac780s_write(const struct device *dev, const uint8_t *text
     const struct auxdisplay_ac780s_config *config = dev->config;
     const struct auxdisplay_capabilities capabilities = config->capabilities;
     
-    // TODO clarify this (why 0x40?)
+    // precede data with control byte to indicate that data will follow (0x40)
+    // 0x10 is a space - just a placeholder for now
     uint8_t buf[2] = {0x40, 0x10};
 
     int err = 0;
+    int16_t x = 0 , y = 0;
 
     // unfortunately have to write one uint8_t at a time, since a control byte must
     // precede the data to indicate it should be written to RAM.
@@ -455,9 +421,11 @@ static int auxdisplay_ac780s_write(const struct device *dev, const uint8_t *text
         }
 
         auxdisplay_ac780s_advance_current_position(dev);
+        err = auxdisplay_ac780s_cursor_position_get(dev, &x, &y);
 
-        int16_t x = 0 , y = 0;
-        auxdisplay_ac780s_cursor_position_get(dev, &x, &y);
+        if (err) {
+            return err;
+        }
 
         if (x >= (capabilities.columns)) {
             auxdisplay_ac780s_cursor_position_set(
