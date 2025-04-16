@@ -1,0 +1,19 @@
+# ninja log v5
+1	27	1744772752763275380	_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-mkdir	7056545286e30daf
+1	27	1744772752763275380	/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-mkdir	7056545286e30daf
+28	35	1744772752770275491	_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-download	adb0c88023d5f760
+28	35	1744772752770275491	/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-download	adb0c88023d5f760
+35	42	1744772752778275619	_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-update	4487eac78b4d47
+35	42	1744772752778275619	/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-update	4487eac78b4d47
+42	50	1744772752785275730	_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-patch	a2e3ce7a9b61e67c
+42	50	1744772752785275730	/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-patch	a2e3ce7a9b61e67c
+50	57	1744772752793275857	_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-configure	e05ae31b4e67be1a
+50	57	1744772752793275857	/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-configure	e05ae31b4e67be1a
+57	2579	0	_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-build	ddb58bc9f016b3c4
+57	2579	0	/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-build	ddb58bc9f016b3c4
+2579	2587	1744772755322316087	_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-install	d7a0ceb11ae655cf
+2579	2587	1744772755322316087	/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-install	d7a0ceb11ae655cf
+2587	2598	1744772755334316278	_sysbuild/sysbuild/images/CMakeFiles/test0-complete	d11c9f9eb04c0be9
+2587	2598	1744772755334316278	_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-done	d11c9f9eb04c0be9
+2587	2598	1744772755334316278	/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/CMakeFiles/test0-complete	d11c9f9eb04c0be9
+2587	2598	1744772755334316278	/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-done	d11c9f9eb04c0be9

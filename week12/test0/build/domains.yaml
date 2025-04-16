@@ -1,0 +1,7 @@
+default: test0
+build_dir: /home/adam/zephyrProjects/test0/build
+domains:
+  - name: test0
+    build_dir: /home/adam/zephyrProjects/test0/build/test0
+flash_order:
+  - test0

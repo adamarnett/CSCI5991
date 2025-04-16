@@ -1,0 +1,13 @@
+# Target labels
+ test0
+# Source files and their labels
+/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/CMakeFiles/test0
+/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/CMakeFiles/test0.rule
+/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/CMakeFiles/test0-complete.rule
+/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-build.rule
+/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-configure.rule
+/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-download.rule
+/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-install.rule
+/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-mkdir.rule
+/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-patch.rule
+/home/adam/zephyrProjects/test0/build/_sysbuild/sysbuild/images/test0-prefix/src/test0-stamp/test0-update.rule
