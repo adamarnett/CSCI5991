@@ -80,17 +80,22 @@ Each week outlines the intended topic and goals.
   - Possible Goal: Begin work on a public driver for the Sparkfun Quad Alphanumeric Display
    - https://cdn.sparkfun.com/assets/c/8/7/2/5/VK16K33Datasheet.pdf
 
-### Week 9 (Mar 22nd - 28th)
+### Week 9 (Mar 22nd - 28th): Device Driver
 
 ### Week 10 (Mar 29th - Apr 4th)
 
 ### Week 11 (Apr 5th - 11th)
 
-### Week 12 (Apr 12th - 18th)
+### Week 12 (Apr 12th - 18th): Testing
+  - Goal: Use unit/integration testing to verify/debug display
+  - Goal: Connect nRF52840 to Arduino over BLE in order to drive LCD display on a power supply/circuit totally external to the nRF52840
+  - Possible goal: eliminate need for a micro USB cable when powering the nRF52840
 
 ### Week 13 (Apr 19th - 25th)
 
 ### Week 14 (Apr 26th - May 2nd)
 
 ### Week 15 (May 3rd - 9th)
+
+### Week 16 (May 10th - 14th(?))
 
