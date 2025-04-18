@@ -164,7 +164,7 @@ int main(void) {
         hum_value[0] = hum.val1;
 
 
-        k_msleep(3333);
+        k_msleep(1111);
     }
 
 
