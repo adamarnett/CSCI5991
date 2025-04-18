@@ -1,0 +1,13 @@
+# Target labels
+ therm
+# Source files and their labels
+/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/CMakeFiles/therm
+/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/CMakeFiles/therm.rule
+/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/CMakeFiles/therm-complete.rule
+/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-build.rule
+/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-configure.rule
+/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-download.rule
+/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-install.rule
+/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-mkdir.rule
+/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-patch.rule
+/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-update.rule

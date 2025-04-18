@@ -1,0 +1,7 @@
+default: therm
+build_dir: /home/adam/zephyrProjects/therm/build
+domains:
+  - name: therm
+    build_dir: /home/adam/zephyrProjects/therm/build/therm
+flash_order:
+  - therm
