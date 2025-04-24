@@ -1,0 +1,5 @@
+west:
+  command: /home/adam/ncs/toolchains/b77d8c1312/usr/local/bin/west build -b native_sim
+    --pristine
+  topdir: /home/adam/myZeph
+  version: 1.2.0

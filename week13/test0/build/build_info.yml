@@ -1,0 +1,53 @@
+cmake:
+  application:
+    configuration-dir: /home/adam/zephyrProjects/test0
+    source-dir: /home/adam/zephyrProjects/test0
+  board:
+    name: native_sim
+    path:
+     - /home/adam/myZeph/zephyr/boards/native/native_sim
+    qualifiers: native
+    revision: 
+  devicetree:
+    bindings-dirs:
+     - /home/adam/myZeph/zephyr/dts/bindings
+    files:
+     - /home/adam/myZeph/zephyr/boards/native/native_sim/native_sim.dts
+    include-dirs:
+     - /home/adam/myZeph/modules/hal/atmel/include
+     - /home/adam/myZeph/modules/hal/gigadevice/include
+     - /home/adam/myZeph/modules/hal/microchip/include
+     - /home/adam/myZeph/modules/hal/microchip/dts
+     - /home/adam/myZeph/modules/hal/nuvoton/dts
+     - /home/adam/myZeph/modules/hal/nxp/dts
+     - /home/adam/myZeph/modules/hal/stm32/dts
+     - /home/adam/myZeph/zephyr/include
+     - /home/adam/myZeph/zephyr/include/zephyr
+     - /home/adam/myZeph/zephyr/dts/common
+     - /home/adam/myZeph/zephyr/dts/x86
+     - /home/adam/myZeph/zephyr/dts/xtensa
+     - /home/adam/myZeph/zephyr/dts/sparc
+     - /home/adam/myZeph/zephyr/dts/riscv
+     - /home/adam/myZeph/zephyr/dts/posix
+     - /home/adam/myZeph/zephyr/dts/nios2
+     - /home/adam/myZeph/zephyr/dts/arm64
+     - /home/adam/myZeph/zephyr/dts/arm
+     - /home/adam/myZeph/zephyr/dts/arc
+     - /home/adam/myZeph/zephyr/dts
+  kconfig:
+    files:
+     - /home/adam/myZeph/zephyr/boards/native/native_sim/native_sim_defconfig
+     - /home/adam/zephyrProjects/test0/prj.conf
+    user-files:
+     - /home/adam/zephyrProjects/test0/prj.conf
+  toolchain:
+    name: host
+    path: 
+  zephyr:
+    version: 4.1.0-rc3
+    zephyr-base: /home/adam/myZeph/zephyr
+version: 0.1.0
+west:
+  command: /home/adam/ncs/toolchains/b77d8c1312/usr/local/bin/west build -b native_sim --pristine
+  topdir: /home/adam/myZeph
+  version: 1.2.0
