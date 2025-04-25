@@ -16,11 +16,6 @@ int my_sensor_send(void *spec, const uint8_t *data, uint32_t len) {
     return i2c_write_dt_wrapper(spec, data, len);
 }
 
-//static struct i2c_dt_spec fake_i2c_dt_spec = {
-//    .bus = (const struct device *)0x1000,
-//    .addr = 0x69
-//};
-
 // setup function
 static void setup() {
     RESET_FAKE(i2c_write_dt_wrapper);
