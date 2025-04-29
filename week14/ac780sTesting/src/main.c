@@ -184,14 +184,24 @@ int main(void)
 */
 
 ZTEST(auxdisplay_ac780s_tests, test_clear) {
+    printk("Hello world!\n");
+
     // get the i2c0 device from dt
     const static struct device *i2c0_dev = DEVICE_DT_GET(DT_CHILD(DT_NODELABEL(i2c0), i2c_100));
+   
+    printk("Hello world! II\n");    
     
     zassert_true(device_is_ready(i2c0_dev), "I2C device not ready");
 
+    printk("Hello world! III\n");
+
     int err = auxdisplay_clear(i2c0_dev);
 
+    printk("Hello world! IV\n");
+
     zassert_equal(err, 0, "FAIL: auxdisplay_ac780s_clear");
+
+    printk("Hello world! V\n");
 
 }
 
