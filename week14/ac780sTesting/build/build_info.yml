@@ -1,0 +1,19 @@
+cmake:
+  application:
+    source-dir: /home/adam/ncsII/ncs/main/zephyr/share/sysbuild
+  board:
+    name: native_sim
+    qualifiers: native
+    revision: 
+  kconfig:
+    files:
+     - /home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/empty.conf
+     - /home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/empty.conf
+    user-files:
+     - /home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/empty.conf
+  sysbuild: true
+version: 0.1.0
+west:
+  command: /home/adam/ncs/toolchains/b77d8c1312/usr/local/bin/west build -b native_sim -s . --pristine
+  topdir: /home/adam/ncsII/ncs/main
+  version: 1.2.0

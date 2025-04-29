@@ -1,0 +1,12 @@
+&i2c0 {
+
+    i2c@100 {
+        status = "okay";
+        compatible = "zephyr,i2c-emul-controller";
+        clock-frequency = <I2C_BITRATE_STANDARD>;
+        reg = <0x100 4>;
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+    };
+};

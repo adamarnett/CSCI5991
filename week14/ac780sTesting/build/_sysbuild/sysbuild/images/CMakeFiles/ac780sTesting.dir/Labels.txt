@@ -1,0 +1,13 @@
+# Target labels
+ ac780sTesting
+# Source files and their labels
+/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/CMakeFiles/ac780sTesting
+/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/CMakeFiles/ac780sTesting.rule
+/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/CMakeFiles/ac780sTesting-complete.rule
+/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-build.rule
+/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-configure.rule
+/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-download.rule
+/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-install.rule
+/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-mkdir.rule
+/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-patch.rule
+/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-update.rule

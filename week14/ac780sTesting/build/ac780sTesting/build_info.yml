@@ -1,0 +1,50 @@
+cmake:
+  application:
+    configuration-dir: /home/adam/zephyrProjects/ac780sTesting
+    source-dir: /home/adam/zephyrProjects/ac780sTesting
+  board:
+    name: native_sim
+    qualifiers: native
+    revision: 
+  devicetree:
+    bindings-dirs:
+     - /home/adam/ncsII/ncs/main/nrf/dts/bindings
+     - /home/adam/ncsII/ncs/main/zephyr/dts/bindings
+    files:
+     - /home/adam/ncsII/ncs/main/zephyr/boards/native/native_sim/native_sim.dts
+     - /home/adam/zephyrProjects/ac780sTesting/boards/native_sim.overlay
+    include-dirs:
+     - /home/adam/ncsII/ncs/main/nrf/include
+     - /home/adam/ncsII/ncs/main/nrf/dts/common
+     - /home/adam/ncsII/ncs/main/nrf/dts/riscv
+     - /home/adam/ncsII/ncs/main/nrf/dts/arm
+     - /home/adam/ncsII/ncs/main/nrf/dts
+     - /home/adam/ncsII/ncs/main/zephyr/include
+     - /home/adam/ncsII/ncs/main/zephyr/include/zephyr
+     - /home/adam/ncsII/ncs/main/zephyr/dts/common
+     - /home/adam/ncsII/ncs/main/zephyr/dts/x86
+     - /home/adam/ncsII/ncs/main/zephyr/dts/xtensa
+     - /home/adam/ncsII/ncs/main/zephyr/dts/sparc
+     - /home/adam/ncsII/ncs/main/zephyr/dts/riscv
+     - /home/adam/ncsII/ncs/main/zephyr/dts/posix
+     - /home/adam/ncsII/ncs/main/zephyr/dts/nios2
+     - /home/adam/ncsII/ncs/main/zephyr/dts/arm64
+     - /home/adam/ncsII/ncs/main/zephyr/dts/arm
+     - /home/adam/ncsII/ncs/main/zephyr/dts/arc
+     - /home/adam/ncsII/ncs/main/zephyr/dts
+    user-files:
+     - /home/adam/zephyrProjects/ac780sTesting/boards/native_sim.overlay
+  kconfig:
+    files:
+     - /home/adam/ncsII/ncs/main/zephyr/boards/native/native_sim/native_sim_defconfig
+     - /home/adam/zephyrProjects/ac780sTesting/prj.conf
+     - /home/adam/zephyrProjects/ac780sTesting/build/ac780sTesting/zephyr/.config.sysbuild
+    user-files:
+     - /home/adam/zephyrProjects/ac780sTesting/prj.conf
+  toolchain:
+    name: host
+    path: 
+  zephyr:
+    version: 4.0.99
+    zephyr-base: /home/adam/ncsII/ncs/main/zephyr
+version: 0.1.0

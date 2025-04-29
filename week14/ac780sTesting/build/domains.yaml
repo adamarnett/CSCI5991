@@ -1,0 +1,7 @@
+default: ac780sTesting
+build_dir: /home/adam/zephyrProjects/ac780sTesting/build
+domains:
+  - name: ac780sTesting
+    build_dir: /home/adam/zephyrProjects/ac780sTesting/build/ac780sTesting
+flash_order:
+  - ac780sTesting

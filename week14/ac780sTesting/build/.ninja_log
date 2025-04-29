@@ -1,0 +1,19 @@
+# ninja log v5
+0	26	1745884620577316994	_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-mkdir	ef5efbcfdd8f5bb6
+0	26	1745884620577316994	/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-mkdir	ef5efbcfdd8f5bb6
+27	34	1745884620585316302	_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-download	a1dd93426423086c
+27	34	1745884620585316302	/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-download	a1dd93426423086c
+34	42	1745884620593315610	_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-update	68bdbcf8ea9c18ff
+34	42	1745884620593315610	/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-update	68bdbcf8ea9c18ff
+42	50	1745884620600315005	_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-patch	b7d20337b18fcac
+42	50	1745884620600315005	/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-patch	b7d20337b18fcac
+50	58	1745884620609314226	_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-configure	369ed80f77caf9b8
+50	58	1745884620609314226	/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-configure	369ed80f77caf9b8
+58	2706	0	_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-build	dfff8ab4baf8b4fe
+58	2706	0	/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-build	dfff8ab4baf8b4fe
+2706	2715	1745884623265085065	_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-install	bb18302e6539b5ed
+2706	2715	1745884623265085065	/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-install	bb18302e6539b5ed
+2715	2727	1745884623277084032	_sysbuild/sysbuild/images/CMakeFiles/ac780sTesting-complete	2984c4b424830607
+2715	2727	1745884623277084032	_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-done	2984c4b424830607
+2715	2727	1745884623277084032	/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/CMakeFiles/ac780sTesting-complete	2984c4b424830607
+2715	2727	1745884623277084032	/home/adam/zephyrProjects/ac780sTesting/build/_sysbuild/sysbuild/images/ac780sTesting-prefix/src/ac780sTesting-stamp/ac780sTesting-done	2984c4b424830607
