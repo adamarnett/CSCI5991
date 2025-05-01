@@ -5,17 +5,6 @@
 
 #include <zephyr/device.h>
 
-#define SGP30_CMD_IAQ_INIT                      0x2003
-#define SGP30_CMD_MEASURE_RAW	                0x2050
-#define SGP30_CMD_MEASURE_TEST	                0x2032
-#define SGP30_CMD_MEASURE_IAQ                   0x2008
-#define SGP30_CMD_GET_IAQ_BASELINE              0x2015
-#define SGP30_CMD_SET_IAQ_BASELINE              0x201E
-#define SGP30_CMD_SET_ABSOLUTE_HUMIDITY         0x2061
-#define SGP30_CMD_GET_FEATURE_SET               0x202F
-#define SGP30_CMD_GET_TVOC_INCEPTIVE_BASELINE   0x20B3
-#define SGP30_CMD_SET_TVOC_BASELINE             0x2077
-#define SGP30_CMD_GET_SERIAL_ID                 0x3682
 
 enum sgp30_command {
 	SGP30_CMD_IAQ_INIT                    =  0x2003,
