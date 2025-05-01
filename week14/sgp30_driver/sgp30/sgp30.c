@@ -35,25 +35,26 @@ static int sgp30_write_command(const struct device *dev, sgp30_command cmd) {
 	return i2c_write_dt(&config->bus, tx_buf, sizeof(tx_buf));
 }
 
-static int sgp30_start_measurement(const struct device *dev)
-{
-	const struct sgp30_config *config = dev->config;
-	struct sgp30_data *data = dev->data;
-	uint8_t tx_buf[8];
-
-	sys_put_be16(SGP30_CMD_MEASURE_RAW, tx_buf);
-	sys_put_be24(sys_get_be24(data->rh_param), &tx_buf[2]);
-	sys_put_be24(sys_get_be24(data->t_param), &tx_buf[5]);
-
-	return i2c_write_dt(&config->bus, tx_buf, sizeof(tx_buf));
-}
-
 static int sgp30_attr_set(const struct device *dev,
 				enum sensor_channel chan,
 				enum sensor_attribute attr,
 				const struct sensor_value *val)
 {
 	struct sgp30_data *data = dev->data;
+
+    if ((enum sensor_attribute_sgp30)attr != SENSOR_ATTR_SGP30_ABSOLUTE_HUMIDITY) {
+        return -ENOTSUP;
+    }
+
+    uint8_t tx_buf[3] = {0,0,0};
+
+
+    // NOTE TODO LOOK HERE PLEASE
+    // anywhere data is read or write might need modification, because I just noticed
+    // on the datasheet that there is no stop condition between sending the command
+    // and sending the data or starting the read, so different zephyr functions will
+    // be needed (like i2c_write_read_dt, or a modification of how i2c_write is called)
+
 
 	/*
 	 * Temperature and RH conversion to ticks as explained in datasheet
@@ -218,14 +219,27 @@ static int sgp30_channel_get(const struct device *dev,
 	const struct sgp30_data *data = dev->data;
 
 	if (
+        chan != SENSOR_CHAN_GAS_RES &&
         chan != SENSOR_CHAN_VOC &&
         chan != SENSOR_CHAN_CO2 
     ) {
-		return -ENOTSUP;
-	}
+        return -ENOTSUP;
+    }
 
-	val->val1 = data->raw_sample;
-	val->val2 = 0;
+    switch (chan) {
+        case SENSOR_CHAN_GAS_RES:
+            val->val1 = data->raw_etoh;
+	        val->val2 = 0;
+            break;
+        case SENSOR_CHAN_CO2:
+            val->val1 = data->co2eq;
+	        val->val2 = 0;
+            break;
+        case SENSOR_CHAN_VOC:
+            val->val1 = data->tvoc;
+	        val->val2 = 0;
+            break;
+    }
 
 	return 0;
 }
