@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/CMakeFiles/therm"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/CMakeFiles/therm.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/CMakeFiles/therm-complete.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-build.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-configure.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-download.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-install.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-mkdir.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-patch.rule"
+		},
+		{
+			"file" : "/home/adam/zephyrProjects/therm/build/_sysbuild/sysbuild/images/therm-prefix/src/therm-stamp/therm-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"therm"
+		],
+		"name" : "therm"
+	}
+}

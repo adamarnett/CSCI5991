@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "sht4x.h": "c",
+        "sgp30.h": "c"
+    }
+}
