@@ -1,0 +1,10 @@
+# SGP30 multipixel gas sensor configuration options
+
+config SGP30
+	bool "SGP30 Multipixel Gas Sensor"
+	default y
+	depends on DT_HAS_SENSIRION_SGP30_ENABLED
+	select I2C
+	select CRC
+	help
+	  Enable driver for SGP30 Multipixel Gas Sensor.

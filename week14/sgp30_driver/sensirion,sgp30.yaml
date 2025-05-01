@@ -1,0 +1,13 @@
+
+description: Sensirion SGP30 Multipixel Gas Sensor
+
+compatible: "sensirion,sgp30"
+
+include: [sensor-device.yaml, i2c-device.yaml]
+
+properties:
+  enable-selftest:
+    type: boolean
+    description: |
+      Enabling this will run a selftest when the driver initializes.
+      The selftest takes ~220ms.
