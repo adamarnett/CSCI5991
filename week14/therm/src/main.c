@@ -125,7 +125,13 @@ static void bt_ready() {
 }
 
 // get a measurement from the SHT41, store in temp and hum structs
-int getMeasurement(struct sensor_value* temp, struct sensor_value* hum, struct sensor_value* gas) {
+int getMeasurement(
+    struct sensor_value* temp,
+    struct sensor_value* hum,
+    struct sensor_value* gas,
+    struct sensor_value* tvoc,
+    struct sensor_value* co2eq
+    ) {
     int err = 0;
 
     if (sensor_sample_fetch(i2c1_therm)) {
@@ -150,11 +156,23 @@ int getMeasurement(struct sensor_value* temp, struct sensor_value* hum, struct s
     if (err) {
         printk("Err [%d] in sgp30\n", err);
     }
+    err = sensor_channel_get(i2c0_gas, SENSOR_CHAN_CO2, co2eq);
+    if (err) {
+        printk("Err [%d] in sgp30\n", err);
+    }
+    err = sensor_channel_get(i2c0_gas, SENSOR_CHAN_VOC, tvoc);
+    if (err) {
+        printk("Err [%d] in sgp30\n", err);
+    }
 
-    printf("SHT4X: %02d Temp. [C] ; %02d RH [%%] ; %02d ETOH [ppm]\n",
+
+    printf("SHT4X: %02d Temp. [C] ; %02d RH [%%]\nSGP30 (raw): %02d H2 [sensor milliohms] ; %02d ETOH [sensor milliohms]\nSGP30 (iaq): %02d VOC [sensor milliohms] ; %02d CO2 [sensor milliohms]\n",
         temp->val1,
         hum->val1,
-        gas->val1
+        gas->val1,
+        gas->val2,
+        tvoc->val1,
+        co2eq->val1
     );
 
     return err;
@@ -175,11 +193,11 @@ int main(void) {
 		return 0;
 	}
 
-    struct sensor_value temp, hum, gas;
+    struct sensor_value temp, hum, gas, tvoc, co2eq;
 
     int err = 0;
 
-    err = getMeasurement(&temp, &hum, &gas);
+    err = getMeasurement(&temp, &hum, &gas, &tvoc, &co2eq);
     if (err) {
         printk("Error getting measurement: err = [%d]\n", err);
         return -1;
@@ -195,7 +213,7 @@ int main(void) {
 
     while (1) {
         
-        err = getMeasurement(&temp, &hum, &gas);
+        err = getMeasurement(&temp, &hum, &gas, &tvoc, &co2eq);
         if (err) {
             printk("Error getting measurement: err = [%d]\n", err);
             return -1;
