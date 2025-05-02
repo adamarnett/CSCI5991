@@ -91,9 +91,12 @@ Each week outlines the intended topic and goals.
   - Goal: Connect nRF52840 to Arduino over BLE in order to drive LCD display on a power supply/circuit totally external to the nRF52840
   - Possible goal: eliminate need for a micro USB cable when powering the nRF52840
 
-### Week 13 (Apr 19th - 25th)
+### Week 13 (Apr 19th - 25th): More Testing
+  - Goal: Use faked functions with FFF to enable integration testing of AC780S driver on native hardware (Linux)
 
-### Week 14 (Apr 26th - May 2nd)
+### Week 14 (Apr 26th - May 2nd): Thermometer Improvements
+ - Goal: Add to thermometer project to increase complexity and allow for more opportunities for power optimization
+ - Goal: Debug AC780S driver to prepare to contribute to official zephyr repo
 
 ### Week 15 (May 3rd - 9th)
 
