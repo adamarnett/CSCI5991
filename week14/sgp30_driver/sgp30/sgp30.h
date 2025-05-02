@@ -47,7 +47,7 @@ enum sgp30_command {
 
 // value range of humidity compensation parameter
 #define SGP30_MIN_ABSOLUTE_HUMIDITY 0
-#define SGP30_MAX_ABSOLUTE_HUMIDITY 256000 
+#define SGP30_MAX_ABSOLUTE_HUMIDITY 256000
 
 struct sgp30_config {
 	struct i2c_dt_spec bus;
@@ -62,6 +62,8 @@ struct sgp30_data {
     uint16_t co2eq;
     // humidity compensation parameter, 0 if compensation disabled
     uint32_t humidityCompensation;
+    bool iaqInitialized;
+    struct k_timer sgp30_iaq_timer;
 };
 
 #endif /* ZEPHYR_DRIVERS_SENSOR_SGP30_SGP30_H_ */
