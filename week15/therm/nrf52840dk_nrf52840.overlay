@@ -1,0 +1,49 @@
+
+
+&i2c0 {
+
+    sgp30@58 {
+        status = "okay";
+        compatible = "sensirion,sgp30";
+        reg = <0x58>;
+    };
+	
+    //ac780s@3c {
+	//	status = "okay";
+	//	compatible = "ac780s";
+	//	reg = <0x3C>;
+	//	columns = <8>;
+	//	rows = <2>;
+	//};
+};
+
+&i2c1 {
+	status = "okay";
+	clock-frequency = <I2C_BITRATE_FAST>;
+    
+	sht4x@44 {
+		status = "okay";
+		compatible = "sensirion,sht4x";
+		reg = <0x44>;
+		repeatability = <2>;
+	};
+};
+
+&pinctrl {
+	i2c0_default: i2c0_default{
+		group1 {
+			psels = <NRF_PSEL(TWIM_SDA, 0, 26)>,
+				<NRF_PSEL(TWIM_SCL, 0, 27)>;
+			bias-pull-up;
+		};
+	};
+
+	i2c0_sleep: i2c0_sleep{
+		group1 {
+			psels = <NRF_PSEL(TWIM_SDA, 0, 26)>,
+				<NRF_PSEL(TWIM_SCL, 0, 27)>;
+			low-power-enable;
+		};
+	};
+
+};
