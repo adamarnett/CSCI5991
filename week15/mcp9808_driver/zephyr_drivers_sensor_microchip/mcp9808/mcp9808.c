@@ -24,6 +24,8 @@ struct mcp9808_data {
     uint16_t critical_temp;
     uint16_t alert_temp_upper;
     uint16_t alert_temp_lower;
+    uint16_t config_reg;
+    bool shutdown;
 };
 
 enum mcp9808_register {
@@ -58,12 +60,63 @@ enum mcp9808_amb_temp_bit {
     // bits 11 through 0 represent ambient temp in celcius
 };
 
+static int mcp9808_config_set(
+    const struct device *dev, 
+    enum mcp9808_config_bit bit
+) {
+    const struct mcp9808_config *config = dev->config;
+    const struct mcp9808_data *data = dev->data;
+
+    uint8_t tx_buf[1] = {bit};
+    int err = i2c_write_dt(
+        &config->bus,
+        tx_buf,
+        sizeof(tx_buf)
+    );
+    if (err) {
+        return;
+    }
+    
+    err = i2c_write_dt(
+        &config->bus,
+        &data->config_reg,
+        sizof(data->config_reg)
+    );
+    if (err) {
+        return err;
+    }
+
+    return 0;
+}
+
 static int mcp9808_attr_set(
     const struct device *dev,
     enum sensor_channel chan,
     enum sensor_attribute attr,
     const struct sensor_value *val
 ) {
+
+
+    if (
+        attr != SENSOR_ATTR_HYSTERESIS &&
+        attr != SENSOR_ATTR_UPPER_THRESH &&
+        attr != SENSOR_ATTR_LOWER_THRESH &&
+        attr != SENSOR_ATTR_ALERT
+    ) {
+        return -EINVAL;
+    }
+
+    //switch (attr)
+    //{
+    //case SENSOR_ATTR_ALERT:
+    //    
+    //    break;
+    //
+    //default:
+    //    break;
+    //}
+
+
     return 0;
 }
 
@@ -77,18 +130,23 @@ static int mcp9808_convert_ambient_temp(
         return -EINVAL;
     }
 
+    // get lowest 4 bits for fractional part
+    val->val2 = (int32_t)(raw_temp & 0x000F);
+
+    // right shift to get rid of fractional part
+    raw_temp = raw_temp >> 4;
+
     // if sign bit is set
     if (raw_temp & MCP9808_AMB_TEMP_SIGN) {
-        // flip all the bits
-        raw_temp = ~raw_temp;
-        // set the sign bit
-        raw_temp |= MCP9808_AMB_TEMP_SIGN;
+        // sign extension
+        raw_temp |= 0xFE00;
+    } else {
+        // otherwise ensure only bits that hold numerical
+        // data are set
+        raw_temp &= 0x00FF;
     }
-    // left shift to eliminate alert bits
-    raw_temp = raw_temp << 3;
     
-    val->val2 = (int32_t)(raw_temp & 0xFF);
-    val->val1 = (int32_t)(((raw_temp & 0xFF00) >> 8) | 0xFF00);
+    val->val1 = (int32_t)(raw_temp & 0xFF);
 
     return 0;
 }
@@ -143,6 +201,8 @@ static int mcp9808_init(const struct device *dev) {
     data->critical_temp = 0x00;
     data->alert_temp_upper = 0x00;
     data->alert_temp_lower = 0x00;
+    data->hysteresis = 0x00;
+    data->shutdown = false;
 
     return 0;
 }
