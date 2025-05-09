@@ -1,0 +1,53 @@
+cmake:
+  application:
+    configuration-dir: /home/adam/zephyrProjects/mcp9808Main
+    source-dir: /home/adam/zephyrProjects/mcp9808Main
+  board:
+    name: nrf52840dk
+    qualifiers: nrf52840
+    revision: 
+  devicetree:
+    bindings-dirs:
+     - /home/adam/ncsII/ncs/main/nrf/dts/bindings
+     - /home/adam/ncsII/ncs/main/zephyr/dts/bindings
+    files:
+     - /home/adam/ncsII/ncs/main/zephyr/boards/nordic/nrf52840dk/nrf52840dk_nrf52840.dts
+     - nrf52840dk_nrf52840.overlay
+    include-dirs:
+     - /home/adam/ncsII/ncs/main/nrf/include
+     - /home/adam/ncsII/ncs/main/nrf/dts/common
+     - /home/adam/ncsII/ncs/main/nrf/dts/riscv
+     - /home/adam/ncsII/ncs/main/nrf/dts/arm
+     - /home/adam/ncsII/ncs/main/nrf/dts
+     - /home/adam/ncsII/ncs/main/zephyr/include
+     - /home/adam/ncsII/ncs/main/zephyr/include/zephyr
+     - /home/adam/ncsII/ncs/main/zephyr/dts/common
+     - /home/adam/ncsII/ncs/main/zephyr/dts/x86
+     - /home/adam/ncsII/ncs/main/zephyr/dts/xtensa
+     - /home/adam/ncsII/ncs/main/zephyr/dts/sparc
+     - /home/adam/ncsII/ncs/main/zephyr/dts/riscv
+     - /home/adam/ncsII/ncs/main/zephyr/dts/posix
+     - /home/adam/ncsII/ncs/main/zephyr/dts/nios2
+     - /home/adam/ncsII/ncs/main/zephyr/dts/arm64
+     - /home/adam/ncsII/ncs/main/zephyr/dts/arm
+     - /home/adam/ncsII/ncs/main/zephyr/dts/arc
+     - /home/adam/ncsII/ncs/main/zephyr/dts
+    user-files:
+     - nrf52840dk_nrf52840.overlay
+  kconfig:
+    files:
+     - /home/adam/ncsII/ncs/main/zephyr/boards/nordic/nrf52840dk/nrf52840dk_nrf52840_defconfig
+     - /home/adam/zephyrProjects/mcp9808Main/prj.conf
+     - /home/adam/zephyrProjects/mcp9808Main/build/mcp9808Main/zephyr/.config.sysbuild
+    user-files:
+     - prj.conf
+  toolchain:
+    name: zephyr
+    path: /home/adam/ncs/toolchains/b77d8c1312/opt/zephyr-sdk
+  vendor-specific:
+    nordic:
+      svdfile: /home/adam/ncsII/ncs/main/modules/hal/nordic/nrfx/mdk/nrf52840.svd
+  zephyr:
+    version: 4.0.99
+    zephyr-base: /home/adam/ncsII/ncs/main/zephyr
+version: 0.1.0

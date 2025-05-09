@@ -1,0 +1,13 @@
+# Target labels
+ mcp9808Main
+# Source files and their labels
+/home/adam/zephyrProjects/mcp9808Main/build/_sysbuild/sysbuild/images/CMakeFiles/mcp9808Main
+/home/adam/zephyrProjects/mcp9808Main/build/_sysbuild/sysbuild/images/CMakeFiles/mcp9808Main.rule
+/home/adam/zephyrProjects/mcp9808Main/build/_sysbuild/sysbuild/images/CMakeFiles/mcp9808Main-complete.rule
+/home/adam/zephyrProjects/mcp9808Main/build/_sysbuild/sysbuild/images/mcp9808Main-prefix/src/mcp9808Main-stamp/mcp9808Main-build.rule
+/home/adam/zephyrProjects/mcp9808Main/build/_sysbuild/sysbuild/images/mcp9808Main-prefix/src/mcp9808Main-stamp/mcp9808Main-configure.rule
+/home/adam/zephyrProjects/mcp9808Main/build/_sysbuild/sysbuild/images/mcp9808Main-prefix/src/mcp9808Main-stamp/mcp9808Main-download.rule
+/home/adam/zephyrProjects/mcp9808Main/build/_sysbuild/sysbuild/images/mcp9808Main-prefix/src/mcp9808Main-stamp/mcp9808Main-install.rule
+/home/adam/zephyrProjects/mcp9808Main/build/_sysbuild/sysbuild/images/mcp9808Main-prefix/src/mcp9808Main-stamp/mcp9808Main-mkdir.rule
+/home/adam/zephyrProjects/mcp9808Main/build/_sysbuild/sysbuild/images/mcp9808Main-prefix/src/mcp9808Main-stamp/mcp9808Main-patch.rule
+/home/adam/zephyrProjects/mcp9808Main/build/_sysbuild/sysbuild/images/mcp9808Main-prefix/src/mcp9808Main-stamp/mcp9808Main-update.rule

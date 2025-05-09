@@ -1,0 +1,9 @@
+#
+# Copyright (c) 2025 Adam Arnett
+#
+
+description: Microchip MCP9808 maximum accuracy digital temperature sensor
+
+compatible: "microchip,mcp9808"
+
+include: [sensor-device.yaml, i2c-device.yaml]

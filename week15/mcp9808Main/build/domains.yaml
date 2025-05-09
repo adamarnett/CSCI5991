@@ -1,0 +1,7 @@
+default: mcp9808Main
+build_dir: /home/adam/zephyrProjects/mcp9808Main/build
+domains:
+  - name: mcp9808Main
+    build_dir: /home/adam/zephyrProjects/mcp9808Main/build/mcp9808Main
+flash_order:
+  - mcp9808Main
