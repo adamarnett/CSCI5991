@@ -54,9 +54,9 @@ enum mcp9808_hysteresis {
 
 struct mcp9808_data {
     uint16_t config_reg;
-    uint16_t alert_temp_upper;
-    uint16_t alert_temp_lower;
-    uint16_t critical_temp;
+    uint16_t alert_temp_upper_reg;
+    uint16_t alert_temp_lower_reg;
+    uint16_t critical_temp_reg;
 	uint16_t raw_ambient_temp;
     uint16_t manufacturer_id;
     uint16_t device_id;
@@ -88,10 +88,10 @@ enum mcp9808_amb_temp_bit {
     // 3-0 represent fractional part
 };
 
-#define MCP9808_THRESH_INT_MAX UINT8_MAX
-#define MCP9808_THRESH_INT_MIN 0
-#define MCP9808_THRESH_FRAC_MAX 
+#define MCP9808_THRESH_BIT_SIGN BIT(12)
 
+// function to update a device register, reg, with whatever value exists
+// for it in dev->data
 static int mcp9808_reg_set(
     const struct device *dev,
     enum mcp9808_register reg
@@ -109,13 +109,13 @@ static int mcp9808_reg_set(
             sys_put_be16(data->config_reg, tx_val_buf);
             break;
         case MCP9808_REG_T_UPPER:
-            sys_put_be16(data->alert_temp_upper, tx_val_buf);
+            sys_put_be16(data->alert_temp_upper_reg, tx_val_buf);
             break;
         case MCP9808_REG_T_LOWER:
-            sys_put_be16(data->alert_temp_lower, tx_val_buf);
+            sys_put_be16(data->alert_temp_lower_reg, tx_val_buf);
             break;
         case MCP9808_REG_T_CRIT:
-            sys_put_be16(data->critical_temp, tx_val_buf);
+            sys_put_be16(data->critical_temp_reg, tx_val_buf);
             break;
         case MCP9808_REG_T_AMB:
             // ambient temp is read only
@@ -158,19 +158,81 @@ static int mcp9808_reg_set(
     return 0;
 }
 
+// function to update a register's corresponding value in the dev->data struct
+static int mcp9808_reg_get(
+    const struct device *dev, 
+    enum mcp9808_register reg
+) {
+    const struct mcp9808_config *config = dev->config;
+    struct mcp9808_data *data = dev->data;
+
+    uint8_t tx_buf[1] = {reg};
+    uint8_t rx_buf[2] = {0,0};
+
+    // write to register pointer then read the pointed to register
+    // note that the resolution register is only 8 bits
+    int err = i2c_write_read_dt(
+        &config->bus,
+        tx_buf,
+        sizeof(tx_buf),
+        rx_buf,
+        ((reg != MCP9808_REG_RESOLU) ? sizeof(rx_buf) : sizeof(rx_buf[0]))
+    );
+    if (err) {
+        return err;
+    }
+
+    // if resolution, handle recieved data differently due to 8 bit size instead of 16
+    if (reg == MCP9808_REG_RESOLU) {
+        if(!IN_RANGE(rx_buf[0], 0, 3)){
+            return -EIO;
+        }
+        data->resolution = (enum mcp9808_resolution)rx_buf[0];
+        return 0;
+    }
+
+    uint16_t rxed_data = (rx_buf[0] << 8) + rx_buf[1];
+
+    switch (reg) {
+        case MCP9808_REG_CONFIG:
+            data->config_reg = rxed_data;
+            break;
+        case MCP9808_REG_T_UPPER:
+            data->alert_temp_upper_reg = rxed_data;
+            break;
+        case MCP9808_REG_T_LOWER:
+            data->alert_temp_lower_reg = rxed_data;
+            break;
+        case MCP9808_REG_T_CRIT:
+            data->critical_temp_reg = rxed_data;
+            break;
+        case MCP9808_REG_T_AMB:
+            data->raw_ambient_temp = rxed_data;
+            break;
+        case MCP9808_REG_MAN_ID:
+            data->manufacturer_id = rxed_data;
+            break;
+        case MCP9808_REG_DEV_ID:
+            data->device_id = rxed_data;
+            break;
+    }
+
+    return 0;
+}
+
 // convert a sensor_val to the format expected by mcp9808 for the upper,
 // lower, and critical threshold values; returns raw value that can be
 // written to one of the temp limit registers
 static uint16_t mcp9808_convert_to_thresh(struct sensor_value *val) {
+    // check value of integer part
     if (!IN_RANGE(val->val1, -255, 255)) {
-        // TODO: figure out better way to indicate error
+        // TODO: figure out better way to indicate error?
         return 0xE000;
     }
 
     // set sign bit if value is negative
-    uint16_t ret = (val->val1 < 0) ? 0x0100 : 0x0000;
+    uint16_t ret = (val->val1 < 0) ? MCP9808_THRESH_BIT_SIGN : 0;
 
-    // TODO: double check that this cast is ok
     // get uint8_t representation of integer part
     uint8_t int_part = (uint8_t)abs(val->val1);
 
@@ -182,7 +244,7 @@ static uint16_t mcp9808_convert_to_thresh(struct sensor_value *val) {
         return -EINVAL;
     }
     // get the two left most digits from it's decimal form
-    while (val2 > 99) {
+    while (val2 >= 99) {
         val2 = val2/10;
     }
     
@@ -193,7 +255,7 @@ static uint16_t mcp9808_convert_to_thresh(struct sensor_value *val) {
         // increment and check for overflow
         if (int_part++ == 0) {
             // TODO: is this the desired behavior?
-            //       or throw an error if 255.87 < sensor_val < 256?
+            //       or throw an error if (255.87 < sensor_val < 256)?
             // round down to 255.75
             int_part = 255;
             frac_part = 3;
@@ -210,6 +272,42 @@ static uint16_t mcp9808_convert_to_thresh(struct sensor_value *val) {
     return ret;
 }
 
+// convert the contents of the ambient temperature register (raw_temp) to
+// a sensor_value struct
+static int mcp9808_convert_from_ambient_temp(
+    uint16_t raw_temp,
+    struct sensor_value *val
+) {
+
+    // if haven't gotten measurement yet
+    if (raw_temp == 0xE0) {
+        return -EINVAL;
+    }
+
+    // convert lowest 4 bits to fractional part of sensor_value
+    val->val2 = 0;
+    for(int i = 0; i < 4; i++) {
+        if (raw_temp & BIT(i)) {
+            val->val2 += (1000000 >> (4-i));
+        }
+    }
+
+    // convert bits 4 through 11 to integer part of sensor_value
+    val->val1 = 0;
+    for (int i = 0; i < 8; i++) {
+        if (raw_temp & BIT(i+4)) {
+            val->val1 += (1 << i);
+        }
+    }
+
+    // if sign bit is set
+    if (raw_temp & MCP9808_AMB_BIT_SIGN) {
+        val->val1 *= -1;
+    }
+
+    return 0;
+}
+
 static int mcp9808_attr_set(
     const struct device *dev,
     enum sensor_channel chan,
@@ -217,6 +315,20 @@ static int mcp9808_attr_set(
     const struct sensor_value *val
 ) {
 
+    // currently implemented:
+    // SENSOR_ATTR_RESOLUTION   --> resolution
+    // SENSOR_ATTR_HYSTERESIS   --> t hyst
+    // SENSOR_ATTR_UPPER_THRESH --> t upper
+    // SENSOR_ATTR_LOWER_THRESH --> t lower
+    // SENSOR_ATTR_ALERT        --> alert
+    // not yet implemented:
+    // shutdown mode
+    // t crit (critical temp threshold)
+    // crit lock (lock t crit bit)
+    // win lock (lock t upper & lower bit)
+    // alert selection (select for alerts from all thresholds or just t crit)
+    // alert polarity (TODO: implement as dt property???)
+    // alert mode (comparator vs interrupt)
     if (
         attr != SENSOR_ATTR_RESOLUTION &&   // resolution reg
         attr != SENSOR_ATTR_HYSTERESIS &&   // bits 9 & 10 in config reg
@@ -228,6 +340,7 @@ static int mcp9808_attr_set(
     }
 
     struct mcp9808_data *data = dev->data;
+    int err = 0;
 
     switch (attr)
     {
@@ -241,6 +354,10 @@ static int mcp9808_attr_set(
         }
         else {
             data->resolution = (enum mcp9808_resolution)val->val1;
+            err = mcp9808_reg_set(dev, MCP9808_REG_RESOLU);
+            if (err) {
+                return err;
+            }
         }
         break;
     case SENSOR_ATTR_HYSTERESIS:
@@ -250,6 +367,10 @@ static int mcp9808_attr_set(
         else {
             data->config_reg &= ~(MCP9808_CONF_BIT_HYST_U | MCP9808_CONF_BIT_HYST_L);
             data->config_reg |= (enum mcp9808_hysteresis)val->val1;
+            err = mcp9808_reg_set(dev, MCP9808_REG_CONFIG);
+            if (err) {
+                return err;
+            }
         }
         break;
     case SENSOR_ATTR_UPPER_THRESH:
@@ -258,7 +379,11 @@ static int mcp9808_attr_set(
             return -EINVAL;
         }
         else {
-            data->alert_temp_upper = raw_value;
+            data->alert_temp_upper_reg = raw_value;
+            err = mcp9808_reg_set(dev, MCP9808_REG_T_UPPER);
+            if (err) {
+                return err;
+            }
         }
         break;
     case SENSOR_ATTR_LOWER_THRESH:
@@ -267,8 +392,13 @@ static int mcp9808_attr_set(
             return -EINVAL;
         }
         else {
-            data->alert_temp_lower = raw_value;
+            data->alert_temp_lower_reg = raw_value;
+            err = mcp9808_reg_set(dev, MCP9808_REG_T_LOWER);
+            if (err) {
+                return err;
+            }
         }
+        
         break;
     case SENSOR_ATTR_ALERT:
         if (val->val1 || val->val2) {
@@ -276,6 +406,10 @@ static int mcp9808_attr_set(
         }
         else {
             data->config_reg &= ~MCP9808_CONF_BIT_ALERT_CTRL;
+        }
+        err = mcp9808_reg_set(dev, MCP9808_REG_CONFIG);
+        if (err) {
+            return err;
         }
         break;
     default:
@@ -286,64 +420,12 @@ static int mcp9808_attr_set(
     return 0;
 }
 
-static int mcp9808_convert_ambient_temp(
-    uint16_t raw_temp,
-    struct sensor_value *val
-) {
-
-    // if haven't gotten measurement yet
-    if (raw_temp == 0xE0) {
-        return -EINVAL;
-    }
-
-    // TODO: double check this, very confident it's wrong
-    // get lowest 4 bits for fractional part
-    val->val2 = (int32_t)(raw_temp & 0x000F);
-
-    // right shift to get rid of fractional part
-    raw_temp = raw_temp >> 4;
-
-    // if sign bit is set
-    if (raw_temp & MCP9808_AMB_BIT_SIGN) {
-        // sign extension
-        raw_temp |= 0xFE00;
-    } else {
-        // otherwise ensure only bits that hold numerical
-        // data are set
-        raw_temp &= 0x00FF;
-    }
-    
-    // TODO: double check this
-    val->val1 = (int32_t)(raw_temp & 0xFF);
-
-    return 0;
-}
-
 static int mcp9808_sample_fetch(
     const struct device *dev, 
     enum sensor_channel chan
 ) {
-    const struct mcp9808_config *config = dev->config;
-    struct mcp9808_data *data = dev->data;
-
-    uint8_t tx_buf[1] = {MCP9808_REG_T_AMB};
-    uint8_t rx_buf[2] = {0,0};
-
-    // write 0x05 to register pointer
-    int err = i2c_write_read_dt(
-        &config->bus,
-        tx_buf,
-        sizeof(tx_buf),
-        rx_buf,
-        sizeof(rx_buf)
-    );
-    if (err) {
-        return err;
-    }
-
-    data->raw_ambient_temp = (rx_buf[0] << 8) + rx_buf[1];
-
-    return 0;
+    // update dev->data->raw_ambient_temp with reg_get
+    return mcp9808_reg_get(dev, MCP9808_REG_T_AMB);
 }
 
 static int mcp9808_channel_get(const struct device *dev,
@@ -356,21 +438,22 @@ static int mcp9808_channel_get(const struct device *dev,
         return -ENOTSUP;
     }
 
-    return mcp9808_convert_ambient_temp(data->raw_ambient_temp, val);
+    // convert value in dev->data->raw_ambient_temp and store it in val
+    return mcp9808_convert_from_ambient_temp(data->raw_ambient_temp, val);
     
 }
 
 static int mcp9808_init(const struct device *dev) {
     struct mcp9808_data *data = dev->data;
 
-    // set ambient temp to a value that's not possible to get
-    // back from the sensor to indicate lack of fetch
-    data->raw_ambient_temp = 0xE0;
-    data->critical_temp = 0x00;
-    data->alert_temp_upper = 0x00;
-    data->alert_temp_lower = 0x00;
-    data->hysteresis = 0x00;
-    data->shutdown = false;
+    data->config_reg = 0;
+    data->raw_ambient_temp = 0;
+    data->critical_temp_reg = 0;
+    data->alert_temp_upper_reg = 0;
+    data->alert_temp_lower_reg = 0;
+    data->manufacturer_id = 0x54;
+    data->device_id = 0x0400;
+    data->resolution = MCP9808_RES_0_0625;
 
     return 0;
 }
