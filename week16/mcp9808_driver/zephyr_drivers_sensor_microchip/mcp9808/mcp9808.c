@@ -6,6 +6,8 @@
 
 #define DT_DRV_COMPAT microchip_mcp9808
 
+//#define DEBUG
+
 #include <zephyr/kernel.h>
 #include <zephyr/drivers/sensor.h>
 #include <zephyr/logging/log.h>
@@ -61,7 +63,8 @@ struct mcp9808_data {
 	uint16_t reg_t_amb;
     uint16_t reg_man_id;
     uint16_t reg_dev_id;
-    enum mcp9808_resolution_bits reg_res;
+    uint16_t reg_res;
+    //enum mcp9808_resolution_bits reg_res;
 };
 
 // accesible registers within mcp9808
@@ -93,6 +96,92 @@ enum mcp9808_amb_temp_bit {
 //const int32_t mcp9808_hysteresis_options_int_part[4] = {0, 1, 3, 6};
 //const int32_t mcp9808_hysteresis_options_frac_part[4] = {0, 500000, 0, 0};
 
+// function to update a register's corresponding value in the dev->data struct
+static int mcp9808_reg_get(
+    const struct device *dev, 
+    enum mcp9808_register reg
+) {
+    const struct mcp9808_config *config = dev->config;
+    struct mcp9808_data *data = dev->data;
+
+    uint8_t tx_buf[1] = {reg};
+    uint8_t rx_buf[2] = {0,0};
+
+    // write to register pointer then read the pointed to register
+    // note that the resolution register is only 8 bits
+    int err = i2c_write_read_dt(
+        &config->bus,
+        tx_buf,
+        sizeof(tx_buf),
+        rx_buf,
+        //sizeof(rx_buf)
+        ((reg != MCP9808_REG_RES) ? sizeof(rx_buf) : sizeof(rx_buf[0]))
+    );
+    if (err) {
+        return err;
+    }
+
+    LOG_HEXDUMP_INF(rx_buf, sizeof(rx_buf), "RX_BUF");
+
+    # ifdef DEBUG
+    //printk"Recieved data from reg [%d]\n", reg);
+    //printk"[");
+    for (int i = 7; i >= 0; i--) {
+        //printk"%d ", (rx_buf[0] >> i) & 0x01 );
+    }
+    //printk"]\n");
+    //printk"[");
+    for (int i = 7; i >= 0; i--) {
+        //printk"%d ", (rx_buf[1] >> i) & 0x01 );
+    }
+    //printk"]\n");
+    # endif
+
+    // if resolution, handle recieved data differently due to 8 bit size instead of 16
+    if (reg == MCP9808_REG_RES) {
+        if(!IN_RANGE(rx_buf[0], 0, 3)){
+            return -EIO;
+        }
+        data->reg_res = (enum mcp9808_resolution_bits)rx_buf[0];
+        return 0;
+    }
+
+    uint16_t rxed_data = (rx_buf[0] << 8) + rx_buf[1];
+
+    
+
+    switch (reg) {
+        case MCP9808_REG_CONFIG:
+            data->reg_config = rxed_data;
+            break;
+        case MCP9808_REG_T_UPPER:
+            data->reg_t_upper = rxed_data;
+            break;
+        case MCP9808_REG_T_LOWER:
+            data->reg_t_lower = rxed_data;
+            break;
+        case MCP9808_REG_T_CRIT:
+            data->reg_t_crit = rxed_data;
+            break;
+        case MCP9808_REG_T_AMB:
+            data->reg_t_amb = rxed_data;
+            break;
+        case MCP9808_REG_MAN_ID:
+            data->reg_man_id = rxed_data;
+            break;
+        case MCP9808_REG_DEV_ID:
+            data->reg_dev_id = rxed_data;
+            break;
+        case MCP9808_REG_RES:
+            data->reg_res = rxed_data;
+            break;
+        default:
+            return -EINVAL;
+    }
+
+    return 0;
+}
+
 // function to update a device register, reg, with whatever value exists
 // for it in dev->data
 static int mcp9808_reg_set(
@@ -100,7 +189,7 @@ static int mcp9808_reg_set(
     enum mcp9808_register reg
 ) {
     const struct mcp9808_config *config = dev->config;
-    const struct mcp9808_data *data = dev->data;
+    struct mcp9808_data *data = dev->data;
 
     // buffer to hold value of register to write to
     uint8_t tx_reg_buf[1] = {(uint8_t)reg};
@@ -131,98 +220,59 @@ static int mcp9808_reg_set(
             return -EACCES;
         case MCP9808_REG_RES:
             tx_val_buf[0] = (uint8_t)data->reg_res;
+            //sys_put_be16(data->reg_res, tx_val_buf);
+            //data->reg_res = 0xFFFF;
             break;
         default:
             return -EINVAL;
     }
+
+    mcp9808_reg_get(dev, reg);
+    LOG_HEXDUMP_INF(&data->reg_config, sizeof(data->reg_config), "REGISTER BEFORE SET");
+
+    uint8_t tx_final[] = {0x01,0x06,0x00};
+    //tx_final[0] = tx_reg_buf[0];
+    //sys_put_be16(data->reg_config, tx_final+1);
+
+    LOG_HEXDUMP_INF(tx_final, sizeof(tx_final), "TX FINAL, BEFORE SEND**************");
+
+    int err = i2c_write_dt(
+        &config->bus,
+        tx_final,
+        sizeof(tx_final)
+    );
+    if (err) {
+        LOG_INF("MCP9808_REG_SET I2C ERR: %d\n", err);
+        return err;
+    }
+
 
     // write to register pointer to allow the next write to go to the
     // correct register
-    int err = i2c_write_dt(
-        &config->bus,
-        tx_reg_buf,
-        sizeof(tx_reg_buf)
-    );
-    if (err) {
-        return err;
-    }
-    
+    //int err = i2c_write_dt(
+    //    &config->bus,
+    //    tx_reg_buf,
+    //    sizeof(tx_reg_buf)
+    //);
+    //if (err) {
+    //    LOG_INF("MCP9808_REG_SET I2C ERR: %d\n", err);
+    //    return err;
+    //}
     // write entirely new value to 16 bit register
     // note that the resolution register is only 8 bits
-    err = i2c_write_dt(
-        &config->bus,
-        tx_val_buf,
-        ((reg != MCP9808_REG_RES) ? sizeof(tx_val_buf) : sizeof(tx_val_buf[0]))
-    );
-    if (err) {
-        return err;
-    }
-
-    return 0;
-}
-
-// function to update a register's corresponding value in the dev->data struct
-static int mcp9808_reg_get(
-    const struct device *dev, 
-    enum mcp9808_register reg
-) {
-    const struct mcp9808_config *config = dev->config;
-    struct mcp9808_data *data = dev->data;
-
-    uint8_t tx_buf[1] = {reg};
-    uint8_t rx_buf[2] = {0,0};
-
-    // write to register pointer then read the pointed to register
-    // note that the resolution register is only 8 bits
-    int err = i2c_write_read_dt(
-        &config->bus,
-        tx_buf,
-        sizeof(tx_buf),
-        rx_buf,
-        ((reg != MCP9808_REG_RES) ? sizeof(rx_buf) : sizeof(rx_buf[0]))
-    );
-    if (err) {
-        return err;
-    }
-
-    // if resolution, handle recieved data differently due to 8 bit size instead of 16
-    if (reg == MCP9808_REG_RES) {
-        if(!IN_RANGE(rx_buf[0], 0, 3)){
-            return -EIO;
-        }
-        data->reg_res = (enum mcp9808_resolution_bits)rx_buf[0];
-        return 0;
-    }
-
-    uint16_t rxed_data = (rx_buf[0] << 8) + rx_buf[1];
-
-    switch (reg) {
-        case MCP9808_REG_CONFIG:
-            data->reg_config = rxed_data;
-            break;
-        case MCP9808_REG_T_UPPER:
-            data->reg_t_upper = rxed_data;
-            break;
-        case MCP9808_REG_T_LOWER:
-            data->reg_t_lower = rxed_data;
-            break;
-        case MCP9808_REG_T_CRIT:
-            data->reg_t_crit = rxed_data;
-            break;
-        case MCP9808_REG_T_AMB:
-            data->reg_t_amb = rxed_data;
-            break;
-        case MCP9808_REG_MAN_ID:
-            data->reg_man_id = rxed_data;
-            break;
-        case MCP9808_REG_DEV_ID:
-            data->reg_dev_id = rxed_data;
-            break;
-        case MCP9808_REG_RES:
-            return -EINVAL;
-        default:
-            return -EINVAL;
-    }
+    //err = i2c_write_dt(
+    //    &config->bus,
+    //    tx_val_buf,
+    //    //sizeof(tx_val_buf)
+    //    ((reg != MCP9808_REG_RES) ? sizeof(tx_val_buf) : sizeof(tx_val_buf[0]))
+    //);
+    //if (err) {
+    //    LOG_INF("MCP9808_REG_SET I2C ERR: %d\n", err);
+    //    return err;
+    //}
+    
+    mcp9808_reg_get(dev, reg);
+    LOG_HEXDUMP_INF(&data->reg_config, sizeof(data->reg_config), "REGISTER AFTER SET");
 
     return 0;
 }
