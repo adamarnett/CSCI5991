@@ -1,0 +1,13 @@
+# Microchip MCP9808 high accuracy digital temperature sensor driver
+#
+# Copyright (c) 2025 Adam Arnett
+#
+# SPDX-License-Identifier: Apache-2.0
+
+config MCP9808
+	bool "MCP9808 high accuracy digital temperature sensor"
+	default y
+	depends on DT_HAS_MICROCHIP_MCP9808_ENABLED
+    select I2C
+	help
+	  Enables MCP9808 high accuracy digital temperature sensor driver.

@@ -1,0 +1,21 @@
+{
+  "toolchainPath": "/home/adam/ncs/toolchains/b77d8c1312",
+  "sdkPath": "/home/adam/ncsII/ncs/main",
+  "board": "nrf52840dk/nrf52840",
+  "boardDir": "/home/adam/ncsII/ncs/main/zephyr/boards/nordic/nrf52840dk",
+  "boardDirs": [
+    "/home/adam/ncsII/ncs/main/zephyr/boards/nordic/nrf52840dk"
+  ],
+  "optimizations": "none",
+  "cmakeArgs": [],
+  "confFiles": [
+    "prj.conf"
+  ],
+  "buildDirectory": "build",
+  "kconfigFragments": [],
+  "snippets": [],
+  "dtcOverlays": [
+    "nrf52840dk_nrf52840.overlay"
+  ],
+  "extraDtcOverlays": []
+}
