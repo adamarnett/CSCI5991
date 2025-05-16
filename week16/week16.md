@@ -1,0 +1,5 @@
+# Week 16
+
+I tried pretty hard for a few days to get the MCP9808 driver done, but frustratingly got stuck on a bug in which none of the registers in the device would update, but the I2C communication looked perfect and never showed any errors. The problem was that I was writing the register pointer and actual data to be written in two different I2C transmissions. Since the data I was testing with (for hysteresis or resolution) never exceeded the highest value of a register on the device (12), it always gave an ACK since when I thought I was writing the data, I was just changing the register pointer again. Once I combined the register pointer write and data write into one things worked perfectly.  
+
+I also had to study for a final so unfortunately I couldn't pour all my time into this - although I wanted to! I was really psyched. After the previously mentioned final was over however, I got home, laughed hysterically for a bit, and just totally crashed. I don't think the driver is very far from being done, but I am completely out of energy.

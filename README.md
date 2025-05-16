@@ -98,7 +98,9 @@ Each week outlines the intended topic and goals.
  - Goal: Add to thermometer project to increase complexity and allow for more opportunities for power optimization
  - Goal: Debug AC780S driver to prepare to contribute to official zephyr repo
 
-### Week 15 (May 3rd - 9th)
+### Week 15 (May 3rd - 9th): SGP30 Driver
+ - Goal: Complete driver for SGP30 sensor to attampt to contribute to official Zephyr repo
 
-### Week 16 (May 10th - 14th(?))
+### Week 16 (May 10th - 14th(?)):
+ - Goal: Complete driver for MCP9808 sensor to attempt to contribute to official Zephyr repo
 
